@@ -5,8 +5,8 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.weightwatchers.ww_exercise_01"
-        minSdkVersion 16
+        applicationId "com.vijay.nbashottracker"
+        minSdkVersion 26
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
