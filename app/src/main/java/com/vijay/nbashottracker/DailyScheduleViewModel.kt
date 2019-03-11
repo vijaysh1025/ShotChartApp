@@ -15,10 +15,10 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class DailyScheduleViewModel
-constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedulerProvider?){
+constructor(@NonNull dataModel: IDataModel?, @NonNull schedulerProvider:ISchedulerProvider?){
 
     @NonNull
-    private val mDataModel:IDataModel = dataModel
+    private val mDataModel:IDataModel? = dataModel
 
     @NonNull
     private val mSchedulerProvider:ISchedulerProvider? = schedulerProvider
@@ -30,7 +30,7 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
         return mSelectedDate
             .observeOn(mSchedulerProvider?.computation())
             .debounce(2000, TimeUnit.MILLISECONDS)
-            .flatMap { date -> mDataModel.getGames(date)?.toObservable() }
+            .flatMap { date -> mDataModel?.getGames(date)?.toObservable() }
     }
 
     fun getDate():Observable<String>{
