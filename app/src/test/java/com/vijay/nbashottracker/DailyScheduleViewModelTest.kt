@@ -4,8 +4,14 @@ import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.Game
 import com.vijay.nbashottracker.model.Team
 import com.vijay.nbashottracker.model.Venue
+import com.vijay.nbashottracker.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.schedulers.TestSchedulerProvider
+import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.observers.TestObserver
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +21,7 @@ import org.mockito.MockitoAnnotations
 import java.lang.Exception
 import java.time.LocalDate
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class DailyScheduleViewModelTest{
     @Mock
@@ -22,11 +29,14 @@ class DailyScheduleViewModelTest{
 
     private var mDailyScheduleViewModel:DailyScheduleViewModel?=null
 
-    @Before
+    private var mSchedulerProvider:TestSchedulerProvider? = null
+
     @Throws(Exception::class)
+    @Before
     fun setUp(){
         MockitoAnnotations.initMocks(this)
-        mDailyScheduleViewModel = DailyScheduleViewModel(mDataModel, TestSchedulerProvider())
+        mSchedulerProvider = TestSchedulerProvider()
+        mDailyScheduleViewModel = DailyScheduleViewModel(mDataModel, mSchedulerProvider)
     }
 
     @Test
@@ -36,10 +46,15 @@ class DailyScheduleViewModelTest{
         val game2:Game = Game("2",Venue("2","TestArena"), Team("2","home1","H1"), Team("3","Away2","A2"))
         val games:List<Game> = listOf(game1,game2)
         Mockito.`when`(mDataModel?.getGames(date)).thenReturn(Single.just(games))
-        var testSubscriber:TestSubscriber<List<Game>> = TestSubscriber<List<Game>>()
 
-        mDailyScheduleViewModel?.getGames()?.subscribe(testSubscriber)
+        var testObserver= TestObserver<List<Game>>()
 
+        mDailyScheduleViewModel!!.getGames().subscribeOn(mSchedulerProvider?.computation()).subscribe(testObserver)
+        mDailyScheduleViewModel!!.dateSelected(date)
+
+        testObserver.assertNoErrors()
+
+        testObserver.awaitDone(5,TimeUnit.SECONDS).assertValue(games)
     }
 
 }
