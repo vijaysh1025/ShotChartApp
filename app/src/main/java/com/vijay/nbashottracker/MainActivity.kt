@@ -1,14 +1,20 @@
 package com.vijay.nbashottracker
 
+import android.animation.ObjectAnimator
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
+import android.view.animation.Interpolator
+import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.DatePicker
+import android.widget.ProgressBar
 import com.vijay.nbashottracker.model.APIClient
 import com.vijay.nbashottracker.model.DataStore
 import com.vijay.nbashottracker.model.Game
@@ -37,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     @Nullable
     private var mGameListAdapter:GameListAdapter?=null
 
+    @Nullable
+    private  var mLoadingBar:ConstraintLayout?=null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         mGameListAdapter = GameListAdapter()
         mDatePicker = findViewById(R.id.datePicker)
         mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  mViewModel?.dateSelected(LocalDate.of(year,month+1,day))}
+        mLoadingBar = findViewById(R.id.gameListProgress)
 
         mGameListView?.adapter = mGameListAdapter
         mGameListView?.layoutManager = LinearLayoutManager(this)
@@ -72,9 +82,10 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setGames))
-
-
-
+        mCompositeDisposable?.add(mViewModel!!.getDate()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe{toggleLoadingBar(show = true)})
     }
 
     private fun unbind(){
@@ -82,6 +93,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setGames(games:List<Game>){
+        toggleLoadingBar(false)
         mGameListAdapter?.games = games
+    }
+
+    private fun toggleLoadingBar(show:Boolean){
+        if(show) {
+            mLoadingBar?.visibility = View.VISIBLE
+            mLoadingBar?.animate()?.apply {
+                interpolator = LinearInterpolator()
+                duration = 200
+                alpha(1f)
+                start()
+            }
+        }
+        else {
+            mLoadingBar?.animate()?.apply {
+                interpolator = LinearInterpolator()
+                duration = 200
+                alpha(0f)
+                start()
+            }?.withEndAction{
+                mLoadingBar?.visibility = View.INVISIBLE
+            }
+
+        }
     }
 }

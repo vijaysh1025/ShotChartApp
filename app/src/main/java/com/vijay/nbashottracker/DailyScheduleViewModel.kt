@@ -33,10 +33,8 @@ constructor(@NonNull dataModel: IDataModel?, @NonNull schedulerProvider:ISchedul
             .flatMap { date -> mDataModel?.getGames(date)?.toObservable() }
     }
 
-    fun getDate():Observable<String>{
+    fun getDate():BehaviorSubject<LocalDate>{
         return mSelectedDate
-            .observeOn(mSchedulerProvider?.computation())
-            .map { date -> date.toString() }
     }
 
     fun dateSelected(@NonNull date:LocalDate) {

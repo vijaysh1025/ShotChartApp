@@ -28,10 +28,10 @@ class GameListAdapter
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         val game:Game = games[position]
-        val home:String = (game.home as Team).name
-        val away:String = (game.away as Team).name
-        val label:String = home + " vs " + away
-        holder.bind(label)
+        val home:String = (game.home as Team).alias
+        val away:String = (game.away as Team).alias
+
+        holder.bind(home,away)
     }
 
     override fun getItemCount(): Int = games.size
@@ -40,12 +40,17 @@ class GameListAdapter
 class GameViewHolder(inflater: LayoutInflater, parent: ViewGroup):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.game_item,parent,false)){
     @NonNull
-    private var mText:TextView? = null
+    private var mHomeText:TextView? = null
+    private var mAwayText:TextView? = null
 
     init{
-        mText = itemView.findViewById(R.id.gameName)
+        mHomeText = itemView.findViewById(R.id.homeTeam)
+        mAwayText = itemView.findViewById(R.id.awayTeam)
     }
 
-    fun bind(@NonNull text:String){mText?.text = text}
+    fun bind(@NonNull home: String, away:String){
+        mHomeText?.text = home
+        mAwayText?.text = away
+    }
 
 }
