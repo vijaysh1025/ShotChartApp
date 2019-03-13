@@ -4,29 +4,20 @@ import android.animation.ObjectAnimator
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
-import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
-import android.view.animation.Interpolator
-import android.view.animation.LinearInterpolator
-import android.widget.Button
-import android.widget.CalendarView
+import android.view.animation.AccelerateInterpolator
 import android.widget.DatePicker
-import android.widget.ProgressBar
-import com.vijay.nbashottracker.model.APIClient
-import com.vijay.nbashottracker.model.DataStore
 import com.vijay.nbashottracker.model.Game
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.annotations.Nullable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.create
 import java.time.LocalDate
 
-class MainActivity : AppCompatActivity() {
+class DailyScheduleActivity : AppCompatActivity() {
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
@@ -49,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_daily_schedule)
 
         mViewModel = (application as ShotTrackerApplication).getDailyScheduleViewModel()
         setupViews()
@@ -70,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         mGameListAdapter = GameListAdapter()
         mDatePicker = findViewById(R.id.datePicker)
         mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  mViewModel?.dateSelected(LocalDate.of(year,month+1,day))}
-        mLoadingBar = findViewById(R.id.gameListProgress)
+        mLoadingBar = findViewById(R.id.gameListProgressLayout)
 
         mGameListView?.adapter = mGameListAdapter
         mGameListView?.layoutManager = LinearLayoutManager(this)
@@ -101,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         if(show) {
             mLoadingBar?.visibility = View.VISIBLE
             mLoadingBar?.animate()?.apply {
-                interpolator = LinearInterpolator()
+                interpolator = AccelerateInterpolator()
                 duration = 200
                 alpha(1f)
                 start()
@@ -109,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             mLoadingBar?.animate()?.apply {
-                interpolator = LinearInterpolator()
+                interpolator = AccelerateInterpolator()
                 duration = 200
                 alpha(0f)
                 start()
