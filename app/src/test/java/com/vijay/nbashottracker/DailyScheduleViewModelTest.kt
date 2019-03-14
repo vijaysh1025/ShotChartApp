@@ -27,7 +27,7 @@ class DailyScheduleViewModelTest{
     fun setUp(){
         MockitoAnnotations.initMocks(this)
         mSchedulerProvider = TestSchedulerProvider()
-        mDailyScheduleViewModel = DailyScheduleViewModel(mDataModel, mSchedulerProvider)
+        mDailyScheduleViewModel = DailyScheduleViewModel(mDataModel!!, mSchedulerProvider!!)
     }
 
     @Test
@@ -57,5 +57,4 @@ class DailyScheduleViewModelTest{
 
         testObserver.awaitDone(5,TimeUnit.SECONDS).assertValue(games)
     }
-
 }

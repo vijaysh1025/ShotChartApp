@@ -6,6 +6,8 @@ import io.reactivex.annotations.NonNull
 import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.schedulers.SchedulerProvider
+import com.vijay.nbashottracker.state.AppState
+import com.vijay.nbashottracker.state.IAppState
 
 class ShotTrackerApplication : Application(){
     @NonNull
@@ -15,13 +17,18 @@ class ShotTrackerApplication : Application(){
     fun getDataModel():IDataModel{return mDataModel;}
 
     @NonNull
-    fun getSchedulerProvider():ISchedulerProvider?{
-        return SchedulerProvider.instance
+    fun getSchedulerProvider():ISchedulerProvider{
+        return SchedulerProvider.instance!!
+    }
+
+    @NonNull
+    fun getAppState():IAppState{
+        return AppState.instance!!
     }
 
     @NonNull
     fun getDailyScheduleViewModel():DailyScheduleViewModel{
-        return DailyScheduleViewModel(getDataModel(), getSchedulerProvider())
+        return DailyScheduleViewModel(getDataModel(), getSchedulerProvider(), getAppState())
     }
 
 }
