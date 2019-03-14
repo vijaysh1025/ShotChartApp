@@ -1,17 +1,12 @@
 package com.vijay.nbashottracker
 
-import com.vijay.nbashottracker.datamodel.DataModel
 import com.vijay.nbashottracker.datamodel.IDataModel
-import com.vijay.nbashottracker.model.APIClient
-import com.vijay.nbashottracker.model.DataStore
-import com.vijay.nbashottracker.model.Game
+import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.schedulers.ISchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
-import retrofit2.create
 import java.time.LocalDate
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class DailyScheduleViewModel

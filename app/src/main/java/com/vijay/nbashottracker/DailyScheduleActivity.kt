@@ -1,6 +1,5 @@
 package com.vijay.nbashottracker
 
-import android.animation.ObjectAnimator
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -9,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.DatePicker
-import com.vijay.nbashottracker.model.Game
+import com.vijay.nbashottracker.model.dailyschedule.Game
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.annotations.Nullable

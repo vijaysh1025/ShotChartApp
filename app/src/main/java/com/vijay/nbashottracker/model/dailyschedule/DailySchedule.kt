@@ -1,4 +1,4 @@
-package com.vijay.nbashottracker.model
+package com.vijay.nbashottracker.model.dailyschedule
 
 import com.google.gson.annotations.SerializedName
 
@@ -8,13 +8,13 @@ data class DailySchedule(@SerializedName("games") private val _games:List<Game>)
 
 data class Game(
     @SerializedName("id") private val _id:String?,
-    @SerializedName("venue") private val _venue:Venue?,
-    @SerializedName("home") private val _home:Team?,
-    @SerializedName("away") private val _away:Team?){
+    @SerializedName("venue") private val _venue: Venue?,
+    @SerializedName("home") private val _home: Team?,
+    @SerializedName("away") private val _away: Team?){
     val id get() = _id ?: ""
     val venue get() = _venue ?: ""
-    val home get() = _home ?: ""
-    val away get() = _away ?: ""
+    val home get() = _home
+    val away get() = _away
 
 }
 
@@ -34,3 +34,4 @@ data class Team(
     val name get() = _name ?: ""
     val alias get() = _alias ?: ""
 }
+

@@ -1,16 +1,11 @@
 package com.vijay.nbashottracker
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.vijay.nbashottracker.model.Game
-import com.vijay.nbashottracker.model.Team
+import com.vijay.nbashottracker.model.dailyschedule.*
 import io.reactivex.annotations.NonNull
-import io.reactivex.annotations.Nullable
 
 class GameListAdapter
     :RecyclerView.Adapter<GameViewHolder>(){
@@ -27,7 +22,7 @@ class GameListAdapter
     }
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val game:Game = games[position]
+        val game: Game = games[position]
         val home:String = (game.home as Team).alias
         val away:String = (game.away as Team).alias
 

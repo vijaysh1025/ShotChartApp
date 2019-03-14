@@ -1,18 +1,13 @@
 package com.vijay.nbashottracker
 
-import android.util.Log
 import com.vijay.nbashottracker.model.APIClient
-import com.vijay.nbashottracker.model.DailySchedule
+import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
 import com.vijay.nbashottracker.model.DataStore
-import com.vijay.nbashottracker.model.Game
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.vijay.nbashottracker.model.dailyschedule.*
+import com.vijay.nbashottracker.model.playbyplay.*
 import io.reactivex.observers.TestObserver
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subscribers.TestSubscriber
-import junit.framework.Assert
-import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,7 +28,6 @@ class DataStoreTest{
 
     @Test
     fun getScheduleOfDayTest(){
-        var testSubscriber = TestSubscriber<DailySchedule>()
         val testObserver = TestObserver<DailySchedule>()
         val testScheduler = TestScheduler()
         val date = LocalDate.parse("2015-12-25")
@@ -47,9 +41,25 @@ class DataStoreTest{
 
         testScheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS)
 
-
-
         testObserver.assertValue { t->(t.games as List<Game>).get(0).id == "b55c5579-950b-4726-8d36-6467f6caa772" }
+    }
+
+    @Test
+    fun getPlayByPlayTest(){
+        val testObserver = TestObserver<PlayByPlay>()
+        val testScheduler = TestScheduler()
+        val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
+
+        var disposable = APIClient.instance
+            ?.create<DataStore>()
+            ?.getPlayByPlay(gameId)
+            ?.subscribeOn(testScheduler)
+            ?.subscribe(testObserver)
+
+        testScheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS)
+
+        testObserver.assertValue { t->t.attendance == 19129}
+
     }
 
 }

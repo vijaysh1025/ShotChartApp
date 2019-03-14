@@ -1,14 +1,13 @@
 package com.vijay.nbashottracker.model
 
+import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
+import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
 import com.vijay.nbashottracker.utilities.*
 import retrofit2.http.GET
-import io.reactivex.Observable;
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import com.vijay.nbashottracker.utilities.*
 import io.reactivex.Single
-import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -17,13 +16,17 @@ import java.io.IOException
 
 
 interface DataStore{
-
     @GET("/nba/trial/v5/en/games/{year}/{month}/{day}/schedule.json")
     fun getScheduleOfDay(
         @Path("year") year:String,
         @Path("month") month:String,
         @Path("day") day:String
     ): Single<DailySchedule>
+
+    @GET("/nba/trial/v5/en/games/{gameId}/pbp.json")
+    fun getPlayByPlay(
+      @Path("gameId") gameId:String
+    ):Single<PlayByPlay>
 }
 
 object APIClient{

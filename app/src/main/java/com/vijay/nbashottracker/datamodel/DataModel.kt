@@ -1,10 +1,9 @@
 package com.vijay.nbashottracker.datamodel
 
 import com.vijay.nbashottracker.model.DataStore
-import com.vijay.nbashottracker.model.Game
+import com.vijay.nbashottracker.model.playbyplay.*
 import com.vijay.nbashottracker.model.APIClient
-import com.vijay.nbashottracker.model.DailySchedule
-import io.reactivex.Observable
+import com.vijay.nbashottracker.model.dailyschedule.*
 import io.reactivex.Single
 import io.reactivex.annotations.NonNull
 import io.reactivex.schedulers.Schedulers
