@@ -30,7 +30,7 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
             .flatMap { date -> mDataModel.getGames(date)?.toObservable() }
     }
 
-    fun getDate():BehaviorSubject<LocalDate>{
+    fun getDateSubject():BehaviorSubject<LocalDate>{
         return  mAppState.mSelectedDate
     }
 
@@ -38,7 +38,13 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
         mAppState.mSelectedDate.onNext(date)
     }
 
+    fun getCurrentGameSubject():BehaviorSubject<Game>{
+        return mAppState.mSelectedGame
+    }
+
     fun gameSelected(@NonNull game:Game){
         mAppState.mSelectedGame.onNext(game)
     }
+
+
 }

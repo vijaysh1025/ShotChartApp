@@ -2,12 +2,12 @@ package com.vijay.nbashottracker
 
 import com.vijay.nbashottracker.model.APIClient
 import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
-import com.vijay.nbashottracker.model.DataStore
+import com.vijay.nbashottracker.model.NBASportRadarAPI
 import com.vijay.nbashottracker.model.dailyschedule.*
 import com.vijay.nbashottracker.model.playbyplay.*
+import com.vijay.nbashottracker.model.summary.GameSummary
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
-import io.reactivex.subscribers.TestSubscriber
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,7 +34,7 @@ class DataStoreTest{
         val datePath = "${date.year} ${date.monthValue} ${date.dayOfMonth}"
         System.out.println(datePath)
         var disposable = APIClient.instance
-            ?.create<DataStore>()
+            ?.create<NBASportRadarAPI>()
             ?.getScheduleOfDay(date.year.toString(), date.monthValue.toString(), date.dayOfMonth.toString())
             ?.subscribeOn(testScheduler)
             ?.subscribe(testObserver)
@@ -51,8 +51,26 @@ class DataStoreTest{
         val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
 
         var disposable = APIClient.instance
-            ?.create<DataStore>()
+            ?.create<NBASportRadarAPI>()
             ?.getPlayByPlay(gameId)
+            ?.subscribeOn(testScheduler)
+            ?.subscribe(testObserver)
+
+        testScheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS)
+
+        testObserver.assertValue { t->t.attendance == 19129}
+
+    }
+
+    @Test
+    fun getPlayerList(){
+        val testObserver = TestObserver<GameSummary>()
+        val testScheduler = TestScheduler()
+        val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
+
+        var disposable = APIClient.instance
+            ?.create<NBASportRadarAPI>()
+            ?.getGameSummary(gameId)
             ?.subscribeOn(testScheduler)
             ?.subscribe(testObserver)
 

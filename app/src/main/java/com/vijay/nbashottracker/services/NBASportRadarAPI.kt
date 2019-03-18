@@ -2,6 +2,7 @@ package com.vijay.nbashottracker.model
 
 import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
 import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
+import com.vijay.nbashottracker.model.summary.GameSummary
 import com.vijay.nbashottracker.utilities.*
 import retrofit2.http.GET
 import retrofit2.Retrofit
@@ -15,7 +16,7 @@ import retrofit2.http.Path
 import java.io.IOException
 
 
-interface DataStore{
+interface NBASportRadarAPI{
     @GET("/nba/trial/v5/en/games/{year}/{month}/{day}/schedule.json")
     fun getScheduleOfDay(
         @Path("year") year:String,
@@ -27,6 +28,11 @@ interface DataStore{
     fun getPlayByPlay(
       @Path("gameId") gameId:String
     ):Single<PlayByPlay>
+
+    @GET("/nba/trial/v5/en/games/{gameId}/summary.json")
+    fun getGameSummary(
+        @Path("gameId") gameId:String
+    ):Single<GameSummary>
 }
 
 object APIClient{

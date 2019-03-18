@@ -31,4 +31,9 @@ class ShotTrackerApplication : Application(){
         return DailyScheduleViewModel(getDataModel(), getSchedulerProvider(), getAppState())
     }
 
+    @NonNull
+    fun getShotChartViewModel():ShotChartViewModel{
+        return ShotChartViewModel(getDataModel(), getSchedulerProvider(), getAppState())
+    }
+
 }

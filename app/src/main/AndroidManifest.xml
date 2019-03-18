@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.vijay.nbashottracker">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
             android:name=".ShotTrackerApplication"
             android:allowBackup="true"
@@ -10,15 +12,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".DailyScheduleActivity">
+        <activity android:name=".ui.ShotChartActivity">
+        </activity>
+        <activity android:name=".ui.DailyScheduleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

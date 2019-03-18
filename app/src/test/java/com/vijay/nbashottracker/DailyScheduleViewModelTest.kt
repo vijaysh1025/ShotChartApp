@@ -3,8 +3,10 @@ package com.vijay.nbashottracker
 import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.*
 import com.vijay.nbashottracker.schedulers.TestSchedulerProvider
+import com.vijay.nbashottracker.state.IAppState
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
+import io.reactivex.subjects.BehaviorSubject
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -22,12 +24,15 @@ class DailyScheduleViewModelTest{
 
     private var mSchedulerProvider:TestSchedulerProvider? = null
 
+    @Mock
+    private var mAppState:IAppState?=null
+
     @Throws(Exception::class)
     @Before
     fun setUp(){
         MockitoAnnotations.initMocks(this)
         mSchedulerProvider = TestSchedulerProvider()
-        mDailyScheduleViewModel = DailyScheduleViewModel(mDataModel!!, mSchedulerProvider!!)
+        mDailyScheduleViewModel = DailyScheduleViewModel(mDataModel!!, mSchedulerProvider!!,mAppState!!)
     }
 
     @Test
@@ -47,6 +52,7 @@ class DailyScheduleViewModelTest{
         )
         val games:List<Game> = listOf(game1,game2)
         Mockito.`when`(mDataModel?.getGames(date)).thenReturn(Single.just(games))
+        Mockito.`when`(mAppState?.mSelectedDate).thenReturn(BehaviorSubject.createDefault(date))
 
         var testObserver= TestObserver<List<Game>>()
 

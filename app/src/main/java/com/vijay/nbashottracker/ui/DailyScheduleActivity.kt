@@ -1,28 +1,34 @@
-package com.vijay.nbashottracker
+package com.vijay.nbashottracker.ui
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.DatePicker
+import com.vijay.nbashottracker.DailyScheduleViewModel
+import com.vijay.nbashottracker.R
+import com.vijay.nbashottracker.ShotTrackerApplication
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.annotations.Nullable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import java.time.LocalDate
 
-class DailyScheduleActivity : AppCompatActivity() {
+class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
 
     @NonNull
-    private var mViewModel:DailyScheduleViewModel?=null
+    private var mViewModel: DailyScheduleViewModel?=null
 
     @NonNull
     private var mDatePicker:DatePicker?=null
@@ -31,7 +37,7 @@ class DailyScheduleActivity : AppCompatActivity() {
     private var mGameListView:RecyclerView?=null
 
     @Nullable
-    private var mGameListAdapter:GameListAdapter?=null
+    private var mGameListAdapter: GameListAdapter?=null
 
     @Nullable
     private  var mLoadingBar:ConstraintLayout?=null
@@ -57,7 +63,7 @@ class DailyScheduleActivity : AppCompatActivity() {
 
     private fun setupViews(){
         mGameListView = findViewById(R.id.gameList)
-        mGameListAdapter = GameListAdapter()
+        mGameListAdapter = GameListAdapter(this)
         mDatePicker = findViewById(R.id.datePicker)
         mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  mViewModel?.dateSelected(LocalDate.of(year,month+1,day))}
         mLoadingBar = findViewById(R.id.gameListProgressLayout)
@@ -67,15 +73,20 @@ class DailyScheduleActivity : AppCompatActivity() {
     }
 
     private fun bind(){
+        Log.d("DailySchedule", "Bind")
         mCompositeDisposable = CompositeDisposable()
         mCompositeDisposable?.add(mViewModel!!.getGames()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setGames))
-        mCompositeDisposable?.add(mViewModel!!.getDate()
+        mCompositeDisposable?.add(mViewModel!!.getDateSubject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{toggleLoadingBar(show = true)})
+        mCompositeDisposable?.add(mViewModel!!.getCurrentGameSubject()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::showShotChart))
     }
 
     private fun unbind(){
@@ -108,5 +119,14 @@ class DailyScheduleActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    override fun onClickGame(game:Game){
+        mViewModel?.gameSelected(game)
+    }
+
+    private fun showShotChart(game:Game){
+        var intent = Intent(this, ShotChartActivity::class.java)
+        startActivity(intent)
     }
 }
