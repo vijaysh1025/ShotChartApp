@@ -30,7 +30,6 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
     private val mAppState:IAppState = appState;
 
     init {
-        Log.d("ShotChartViewModel", "team selected called")
         teamSelected(TeamType.HOME)
     }
 
@@ -54,6 +53,10 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
 
     fun teamSelected(teamType: TeamType){
         mAppState.mSelectedTeam.onNext(teamType)
+    }
+
+    fun gameSelected(@NonNull game:Game){
+        mAppState.mSelectedGame.onNext(game)
     }
 
 

@@ -16,5 +16,6 @@ interface IAppState {
 
     val mSelectedTeam:BehaviorSubject<TeamType>
     val mSelectedGamePlayByPlay:BehaviorSubject<PlayByPlay>
+    val mPlayerShots:BehaviorSubject<List<ShotState>>
 
 }

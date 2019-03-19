@@ -14,6 +14,7 @@ import com.vijay.nbashottracker.DailyScheduleViewModel
 import com.vijay.nbashottracker.R
 import com.vijay.nbashottracker.ShotTrackerApplication
 import com.vijay.nbashottracker.model.dailyschedule.Game
+import com.vijay.nbashottracker.state.AppState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.annotations.Nullable
@@ -75,15 +76,19 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
     private fun bind(){
         Log.d("DailySchedule", "Bind")
         mCompositeDisposable = CompositeDisposable()
+
         mCompositeDisposable?.add(mViewModel!!.getGames()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setGames))
+
         mCompositeDisposable?.add(mViewModel!!.getDateSubject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{toggleLoadingBar(show = true)})
+
         mCompositeDisposable?.add(mViewModel!!.getCurrentGameSubject()
+            .filter { g:Game-> g!=AppState.EMPTY_GAME }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::showShotChart))
@@ -125,7 +130,7 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
         mViewModel?.gameSelected(game)
     }
 
-    private fun showShotChart(game:Game){
+    private fun showShotChart(game:Game?){
         var intent = Intent(this, ShotChartActivity::class.java)
         startActivity(intent)
     }

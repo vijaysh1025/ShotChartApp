@@ -7,6 +7,7 @@ import android.graphics.drawable.VectorDrawable
 import android.util.AttributeSet
 import android.view.View
 import com.vijay.nbashottracker.R
+import com.vijay.nbashottracker.ShotSpotView
 
 /**
  * TODO: document your custom view class.

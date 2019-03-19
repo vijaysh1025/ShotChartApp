@@ -9,95 +9,70 @@
             android:viewportWidth="24"
             android:viewportHeight="24">
             <path
-                android:name="threearc"
-                android:pathData="M 11.986 15.048 C 11.848 15.039 11.709 15.031 11.571 15.022 C 11.554 10.334 11.538 5.646 11.521 0.958 L 12.581 1.018 C 12.561 3.342 12.541 5.666 12.521 7.99 L 12.46 14.962 C 12.302 14.99 12.144 15.019 11.986 15.048"
-                android:fillColor="#EEEEEE"
+                android:name="path"
+                android:pathData="M 11.986 14.988 C 17.852 14.988 22.938 9.888 22.94 4.01 C 23.037 1.042 22.94 0.958 22.94 0.958 L 1.034 0.958 C 1.034 0.958 0.997 0.983 1.034 4.01 L 1.034 4.01 C 0.976 10.007 6.42 14.988 11.986 14.988"
                 android:strokeColor="#979797"
-                android:strokeWidth="0.1"
-                android:strokeLineCap="square"/>
+                android:strokeWidth="0.2"/>
             <path
-                android:name="baseline"
-                android:pathData="M 9.067 1.975 L 9.067 1.017 L 14.993 1.017 L 14.993 1.975 Z"
-                android:fillColor="#D8D8D8"
+                android:name="path_1"
+                android:pathData="M 9.067 9.975 L 9.067 1.017 L 14.993 1.017 L 14.993 9.975 Z"
                 android:strokeColor="#979797"
-                android:strokeWidth="0.1"/>
+                android:strokeWidth="0.2"/>
             <path
-                android:name="freethrow"
+                android:name="path_2"
                 android:pathData="M 9.067 10.055 C 9.067 8.402 10.407 7.062 12.06 7.062 C 13.713 7.062 15.052 8.402 15.052 10.055 C 15.052 11.708 13.713 13.047 12.06 13.047 C 10.407 13.047 9.067 11.708 9.067 10.055 Z"
-                android:fillColor="#00d8d8d8"
                 android:strokeColor="#979797"
-                android:strokeWidth="0.1"/>
+                android:strokeWidth="0.2"/>
         </vector>
     </aapt:attr>
-    <target android:name="threearc">
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:duration="1000"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path_1">
         <aapt:attr name="android:animation">
             <set>
                 <objectAnimator
-                    android:propertyName="pathData"
-                    android:duration="1000"
-                    android:valueFrom="M 11.986 15.048 C 11.848 15.039 11.709 15.031 11.571 15.022 C 11.554 10.334 11.538 5.646 11.521 0.958 L 12.581 1.018 C 12.561 3.342 12.541 5.666 12.521 7.99 L 12.46 14.962 C 12.302 14.99 12.144 15.019 11.986 15.048"
-                    android:valueTo="M 11.986 14.988 C 17.852 14.988 22.938 9.888 22.94 4.01 C 23.037 1.042 22.94 0.958 22.94 0.958 L 1.034 0.958 C 1.034 0.958 0.997 0.983 1.034 4.01 L 1.034 4.01 C 0.976 10.007 6.42 14.988 11.986 14.988"
-                    android:valueType="pathType"
+                    android:propertyName="trimPathEnd"
+                    android:startOffset="242"
+                    android:duration="1001"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
                     android:interpolator="@android:interpolator/fast_out_slow_in"/>
                 <objectAnimator
-                    android:propertyName="fillAlpha"
-                    android:duration="80"
+                    android:propertyName="trimPathEnd"
+                    android:duration="242"
                     android:valueFrom="0"
-                    android:valueTo="1"
+                    android:valueTo="0"
                     android:valueType="floatType"
-                    android:interpolator="@android:anim/accelerate_interpolator"/>
-                <objectAnimator
-                    android:propertyName="strokeAlpha"
-                    android:duration="80"
-                    android:valueFrom="0"
-                    android:valueTo="1"
-                    android:valueType="floatType"
-                    android:interpolator="@android:anim/accelerate_interpolator"/>
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
             </set>
         </aapt:attr>
     </target>
-    <target android:name="baseline">
+    <target android:name="path_2">
         <aapt:attr name="android:animation">
             <set>
                 <objectAnimator
-                    android:propertyName="pathData"
-                    android:duration="1000"
-                    android:valueFrom="M 9.067 1.975 L 9.067 1.017 L 14.993 1.017 L 14.993 1.975 Z"
-                    android:valueTo="M 9.067 9.975 L 9.067 1.017 L 14.993 1.017 L 14.993 9.975 Z"
-                    android:valueType="pathType"
-                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
-                <objectAnimator
-                    android:propertyName="fillAlpha"
-                    android:duration="126"
+                    android:propertyName="trimPathEnd"
+                    android:startOffset="497"
+                    android:duration="1003"
                     android:valueFrom="0"
                     android:valueTo="1"
                     android:valueType="floatType"
-                    android:interpolator="@android:anim/accelerate_interpolator"/>
-                <objectAnimator
-                    android:propertyName="strokeAlpha"
-                    android:duration="126"
-                    android:valueFrom="0"
-                    android:valueTo="1"
-                    android:valueType="floatType"
-                    android:interpolator="@android:anim/accelerate_interpolator"/>
-            </set>
-        </aapt:attr>
-    </target>
-    <target android:name="freethrow">
-        <aapt:attr name="android:animation">
-            <set>
-                <objectAnimator
-                    android:propertyName="pathData"
-                    android:duration="1000"
-                    android:valueFrom="M 11.94 10.055 C 11.94 9.989 11.994 9.935 12.06 9.935 C 12.126 9.935 12.18 9.989 12.18 10.055 C 12.18 10.121 12.126 10.175 12.06 10.175 C 11.994 10.175 11.94 10.121 11.94 10.055 Z"
-                    android:valueTo="M 9.067 10.055 C 9.067 8.402 10.407 7.062 12.06 7.062 C 13.713 7.062 15.052 8.402 15.052 10.055 C 15.052 11.708 13.713 13.047 12.06 13.047 C 10.407 13.047 9.067 11.708 9.067 10.055 Z"
-                    android:valueType="pathType"
                     android:interpolator="@android:interpolator/fast_out_slow_in"/>
                 <objectAnimator
-                    android:propertyName="strokeAlpha"
-                    android:duration="249"
+                    android:propertyName="trimPathEnd"
+                    android:duration="497"
                     android:valueFrom="0"
-                    android:valueTo="1"
+                    android:valueTo="0"
                     android:valueType="floatType"
                     android:interpolator="@android:interpolator/fast_out_slow_in"/>
             </set>

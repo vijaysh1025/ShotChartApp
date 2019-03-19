@@ -12,6 +12,7 @@ import io.reactivex.annotations.NonNull
 class GameListAdapter(itemClickListener: GameItemClickListener)
     :RecyclerView.Adapter<GameListAdapter.GameViewHolder>(){
 
+    var isClickable:Boolean = true;
     var games: List<Game> = listOf()
         set(value){
             field = value
@@ -23,7 +24,7 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return GameViewHolder(inflater, parent, mOnClickListener)
+        return GameViewHolder(inflater, parent, mOnClickListener, isClickable)
     }
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
@@ -33,7 +34,7 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
 
     override fun getItemCount(): Int = games.size
 
-    class GameViewHolder(inflater: LayoutInflater, parent: ViewGroup, itemClickListener: GameItemClickListener?):
+    class GameViewHolder(inflater: LayoutInflater, parent: ViewGroup, itemClickListener: GameItemClickListener?, isClickable:Boolean):
         RecyclerView.ViewHolder(inflater.inflate(R.layout.game_item,parent,false)),View.OnClickListener{
 
         @NonNull
@@ -41,7 +42,7 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
         private var mAwayText:TextView? = null
         private var mGameItemClickListener:GameItemClickListener? = itemClickListener
         private var mGame:Game?=null
-
+        private var isClickable:Boolean = isClickable
         init{
             mHomeText = itemView.findViewById(R.id.homeTeam)
             mAwayText = itemView.findViewById(R.id.awayTeam)
@@ -55,7 +56,8 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
         }
 
         override fun onClick(p0: View?) {
-            mGameItemClickListener?.onClickGame(mGame!!)
+            if(isClickable)
+                mGameItemClickListener?.onClickGame(mGame!!)
         }
 
     }
