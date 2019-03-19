@@ -1,2 +1,3 @@
 # ShotChartApp
-App for viewing shot charts of different NBA games
+The purpose of this app is to pick a an NBA game from any date and display the shot chart data of any given player from that game.
+
