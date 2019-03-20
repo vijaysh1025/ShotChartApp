@@ -19,6 +19,9 @@ class AppState private constructor():IAppState{
     override val mSelectedGame:BehaviorSubject<Game> = BehaviorSubject.create()
 
     @NonNull
+    override val mSelectedPlayer:BehaviorSubject<String> = BehaviorSubject.create()
+
+    @NonNull
     override val mSelectedGamePlayByPlay:BehaviorSubject<PlayByPlay> = BehaviorSubject.create()
 
     @NonNull
@@ -44,4 +47,7 @@ class AppState private constructor():IAppState{
 }
 
 class ShotState
-constructor(normalizedPos:Point, make:Boolean)
+constructor(_pos:Point, _make:Boolean){
+    val pos:Point = _pos
+    val make:Boolean = _make
+}

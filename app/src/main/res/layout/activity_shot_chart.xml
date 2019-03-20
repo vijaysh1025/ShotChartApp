@@ -12,9 +12,7 @@
             android:id="@+id/court_map_view"
             android:layout_width="match_parent"
             android:layout_height="376dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="40dp"
+
             app:exampleDimension="24sp"
             app:exampleColor="#33b5e5"
             app:exampleString="Hello, CourtMapView"
@@ -25,34 +23,35 @@
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
+            android:layout_height="200dp"
+            android:background="@drawable/top_down_fade"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/constraintLayout">
 
-
-        <RadioGroup
-                android:id="@+id/team_toggle_group"
+        <LinearLayout
+                android:id="@+id/teamButtonGroup"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:layout_marginTop="30dp"
                 app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp">
-            <ToggleButton
+            <Button
                     android:text="Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/home_team_toggle"
                     android:layout_weight="1"/>
 
-            <ToggleButton
+            <Button
                     android:text="Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/away_team_toggle"
                     android:layout_weight="1"/>
-        </RadioGroup>
+        </LinearLayout>
 
         <com.wefika.horizontalpicker.HorizontalPicker
                 xmlns:picker="http://schemas.android.com/apk/res/com.wefika.horizontalpicker"
@@ -67,10 +66,10 @@
                 app:sideItems="1"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="15dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/team_toggle_group"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+                android:layout_marginTop="30dp"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/teamButtonGroup"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"/>
 
     </android.support.constraint.ConstraintLayout>
 

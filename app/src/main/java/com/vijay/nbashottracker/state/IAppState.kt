@@ -12,6 +12,7 @@ enum class TeamType{HOME, AWAY}
 interface IAppState {
     val mSelectedDate:BehaviorSubject<LocalDate>
     val mSelectedGame:BehaviorSubject<Game>
+    val mSelectedPlayer:BehaviorSubject<String>
 
 
     val mSelectedTeam:BehaviorSubject<TeamType>

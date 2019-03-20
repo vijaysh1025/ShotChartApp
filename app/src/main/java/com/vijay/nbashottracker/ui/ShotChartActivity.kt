@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ToggleButton
@@ -18,17 +19,18 @@ import com.vijay.nbashottracker.ShotTrackerApplication
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.model.summary.PlayersItem
 import com.vijay.nbashottracker.state.AppState
+import com.vijay.nbashottracker.state.ShotState
 import com.wefika.horizontalpicker.HorizontalPicker
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_shot_chart.*
 import timber.log.Timber
 import java.util.*
 
-class ShotChartActivity : AppCompatActivity(),
-    CourtMapFragment.OnFragmentInteractionListener {
+class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
@@ -37,10 +39,10 @@ class ShotChartActivity : AppCompatActivity(),
     private var mViewModel: ShotChartViewModel?=null
 
     @NonNull
-    private var mHomeTeamToggle: ToggleButton?=null
+    private var mHomeTeamToggle: Button?=null
 
     @NonNull
-    private var mAwayTeamToggle: ToggleButton?=null
+    private var mAwayTeamToggle: Button?=null
 
     @NonNull
     private var mTeamToggleGroup:RadioGroup?=null
@@ -53,6 +55,9 @@ class ShotChartActivity : AppCompatActivity(),
 
     @NonNull
     private var mShotSpots:MutableList<ShotSpotView> = mutableListOf()
+
+    @NonNull
+    private var mPlayerIds:MutableList<String?> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,40 +82,33 @@ class ShotChartActivity : AppCompatActivity(),
     private fun setupViews(){
         mHomeTeamToggle = findViewById(R.id.home_team_toggle)
         mAwayTeamToggle = findViewById(R.id.away_team_toggle)
-        mTeamToggleGroup = findViewById(R.id.team_toggle_group)
         mPlayerPicker = findViewById(R.id.player_picker)
         mCourtMapView = findViewById(R.id.court_map_view)
 
-        mHomeTeamToggle?.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                Log.i("Click Register", "Clicked")
-                val rand = Random()
-                for(a in mShotSpots){
-                    a.animate().x(800.0f*rand.nextFloat()).start()
-                    a.animate().y(800.0f*rand.nextFloat()).start()
-                    a.morph(rand.nextBoolean())
-                }
-            }
-        })
+        mPlayerPicker?.setOnItemSelectedListener(this)
 
-        mTeamToggleGroup?.setOnCheckedChangeListener{radioGroup, i ->
-            for(j in 1..radioGroup.childCount){
-                var button:ToggleButton = radioGroup.getChildAt(j) as ToggleButton
-                button.isChecked = i==j
+//        mHomeTeamToggle?.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(v: View?) {
+//                val rand = Random()
+//                for(a in mShotSpots){
+//                    a.animate().x(800.0f*rand.nextFloat()).start()
+//                    a.animate().y(800.0f*rand.nextFloat()).start()
+//                    a.morph(rand.nextBoolean())
+//                }
+//            }
+//        })
 
-
-            }
-        }
 
         val group:ViewGroup = findViewById(R.id.shot_chart_main)
 
         val rand = Random()
         mShotSpots.clear()
-        for(x in 0..9){
+        for(x in 0..100){
             val iShotSpot = ShotSpotView(this)
 
             iShotSpot.x = 800.0f*rand.nextFloat()
             iShotSpot.y = 800.0f*rand.nextFloat()
+            iShotSpot.alpha = 0f;
             group.addView(iShotSpot,30,30)
 
             mShotSpots.add(x, iShotSpot)
@@ -126,6 +124,11 @@ class ShotChartActivity : AppCompatActivity(),
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setTeamNames))
 
+        mCompositeDisposable?.add(mViewModel!!.getShotMap()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::loadShotChart))
+
         //var players: Observable<List<PlayersItem?>>? = mViewModel!!.getTeamPlayers()
         mCompositeDisposable?.add(mViewModel!!.getTeamPlayers()!!
             .doOnError { t:Throwable -> Log.d("ShotChartActivity", t.cause.toString()) }
@@ -140,27 +143,55 @@ class ShotChartActivity : AppCompatActivity(),
 
     private fun setTeamNames(game:Game){
         mHomeTeamToggle?.text = game.home?.alias
-        mHomeTeamToggle?.textOn = game.home?.alias
-        mHomeTeamToggle?.textOff = game.home?.alias
-
         mAwayTeamToggle?.text = game.away?.alias
-        mAwayTeamToggle?.textOn = game.away?.alias
-        mAwayTeamToggle?.textOff = game.away?.alias
     }
 
     private fun setPlayers(players:List<PlayersItem?>?){
         if(players==null)
             mPlayerPicker?.values = arrayOf("-","-","-")
-        else
+        else {
             mPlayerPicker?.values = players?.map { it?.jerseyNumber.toString() }.toTypedArray()
-    }
-
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            mPlayerIds.clear()
+            mPlayerIds = players.map{it?.id}.toMutableList()
+        }
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         mViewModel?.gameSelected(AppState.EMPTY_GAME)
+    }
+
+    override fun onItemSelected(index: Int) {
+        mViewModel?.playerSelected(mPlayerIds[index]!!)
+    }
+
+    override fun finish() {
+        super.finish()
+
+    }
+
+    private fun loadShotChart(shots:List<ShotState>){
+        val group:ViewGroup = findViewById(R.id.shot_chart_main)
+        for(i in 0..100){
+            if(i<shots.count()){
+                var posX = 0f
+                var posY = 0f
+                if(shots[i].pos.y.toFloat()<564){
+                    posX = shots[i].pos.x.toFloat()/600*group.width
+                    posY = shots[i].pos.y.toFloat()/600*group.width
+                }else{
+                    posX = (600-shots[i].pos.x.toFloat())/600*group.width
+                    posY = (1128-shots[i].pos.y.toFloat())/600*group.width
+                }
+
+
+                mShotSpots[i].alpha =1f;
+                mShotSpots[i].animate().x(posX).start()
+                mShotSpots[i].animate().y(posY).start()
+                mShotSpots[i].morph(shots[i].make)
+            }else{
+                mShotSpots[i].alpha =0f;
+            }
+        }
     }
 }
