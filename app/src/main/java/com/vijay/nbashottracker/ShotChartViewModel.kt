@@ -50,38 +50,38 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
         mAppState.mSelectedTeam.onNext(teamType)
     }
 
-    fun getPlayByPlayEvents():Observable<List<EventsItem?>?>{
-        return mDataModel.getPlayByPlay(mAppState.mSelectedGame.value!!.id)
-            ?.observeOn(mSchedulerProvider.computation())
-            ?.map{ pbp:PlayByPlay ->
-                var allEvents = arrayListOf<EventsItem>()
-                val periods = pbp!!.periods
+//    fun getPlayByPlayEvents():Observable<List<EventsItem?>?>{
+//        return mDataModel.getPlayByPlay(mAppState.mSelectedGame.value!!.id)
+//            ?.observeOn(mSchedulerProvider.computation())
+//            ?.map{ pbp:PlayByPlay ->
+//                var allEvents = arrayListOf<EventsItem>()
+//                val periods = pbp!!.periods
+//
+//                periods!![0]!!.events
+//            }!!.toObservable()
+//    }
 
-                periods!![0]!!.events
-            }!!.toObservable()
-    }
-
-    fun getShotMap():Observable<List<ShotState>>{
-        return mAppState.mSelectedPlayer
-            .observeOn(mSchedulerProvider.computation())
-            .debounce(2000, TimeUnit.MILLISECONDS)
-            .flatMap {
-                getPlayByPlayEvents()
-                    .map {
-                            it-> it
-                        .filter { i->
-                            i?.statistics!=null && i?.statistics?.any { s->s?.type.equals("fieldgoal") }
-                        }
-                        //.filter { i->
-                         //   i?.statistics!!.any{s->s?.type!!.equals("fieldgoal") && s?.player?.id!!.equals(it)} }
-                        .map { i->
-                            ShotState(Point(i?.location!!.coordY,i?.location!!.coordX),i.eventType!!.contains("pointmade"))
-                        }
-                    }
-            }
-
-
-    }
+//    fun getShotMap():Observable<List<ShotState>>{
+//        return mAppState.mSelectedPlayer
+//            .observeOn(mSchedulerProvider.computation())
+//            .debounce(2000, TimeUnit.MILLISECONDS)
+//            .flatMap {
+//                getPlayByPlayEvents()
+//                    .map {
+//                            it-> it
+//                        .filter { i->
+//                            i?.statistics!=null && i?.statistics?.any { s->s?.type.equals("fieldgoal") }
+//                        }
+//                        //.filter { i->
+//                         //   i?.statistics!!.any{s->s?.type!!.equals("fieldgoal") && s?.player?.id!!.equals(it)} }
+//                        .map { i->
+//                            ShotState(Point(i?.location!!.coordY,i?.location!!.coordX),i.eventType!!.contains("pointmade"))
+//                        }
+//                    }
+//            }
+//
+//
+//    }
 
 
     fun gameSelected(@NonNull game:Game){

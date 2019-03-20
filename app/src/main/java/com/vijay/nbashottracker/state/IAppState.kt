@@ -3,6 +3,7 @@ package com.vijay.nbashottracker.state
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
 import com.vijay.nbashottracker.model.playbyplay.Team
+import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
 import java.time.LocalDate
@@ -16,7 +17,7 @@ interface IAppState {
 
 
     val mSelectedTeam:BehaviorSubject<TeamType>
-    val mSelectedGamePlayByPlay:BehaviorSubject<PlayByPlay>
+    val mSelectedGamePlayerStats:BehaviorSubject<Map<String,PlayerStats>>
     val mPlayerShots:BehaviorSubject<List<ShotState>>
 
 }

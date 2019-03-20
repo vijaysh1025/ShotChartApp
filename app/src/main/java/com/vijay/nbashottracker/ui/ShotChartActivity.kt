@@ -124,10 +124,10 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setTeamNames))
 
-        mCompositeDisposable?.add(mViewModel!!.getShotMap()
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::loadShotChart))
+//        mCompositeDisposable?.add(mViewModel!!.getShotMap()
+//            .subscribeOn(Schedulers.computation())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(this::loadShotChart))
 
         //var players: Observable<List<PlayersItem?>>? = mViewModel!!.getTeamPlayers()
         mCompositeDisposable?.add(mViewModel!!.getTeamPlayers()!!

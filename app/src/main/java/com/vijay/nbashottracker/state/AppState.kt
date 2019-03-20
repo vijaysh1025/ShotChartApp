@@ -6,6 +6,7 @@ import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
 import com.vijay.nbashottracker.model.playbyplay.Team
 import com.vijay.nbashottracker.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.schedulers.SchedulerProvider
+import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
 import java.time.LocalDate
@@ -22,7 +23,7 @@ class AppState private constructor():IAppState{
     override val mSelectedPlayer:BehaviorSubject<String> = BehaviorSubject.create()
 
     @NonNull
-    override val mSelectedGamePlayByPlay:BehaviorSubject<PlayByPlay> = BehaviorSubject.create()
+    override val mSelectedGamePlayerStats:BehaviorSubject<Map<String,PlayerStats>> = BehaviorSubject.create()
 
     @NonNull
     override val mSelectedTeam:BehaviorSubject<TeamType> = BehaviorSubject.create()
