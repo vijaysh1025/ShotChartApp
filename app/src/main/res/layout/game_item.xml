@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/gameName"
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:background="@color/cardview_light_background"
+        android:layout_marginBottom="5dp"
+>
+    <TextView
+            android:id="@+id/homeTeam"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:text="Team A"
+            android:gravity="right|center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="4dp"
+            android:textSize="18dp"
+    />
+    <TextView
+            android:id="@+id/vsLabel"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:text="vs"
+            android:gravity="center"
+            app:layout_constraintLeft_toRightOf="@id/homeTeam"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/awayTeam" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toEndOf="@+id/homeTeam" android:layout_marginStart="8dp"/>
+    <TextView
+            android:id="@+id/awayTeam"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:textSize="18dp"
+            android:text="Team A" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp" app:layout_constraintTop_toTopOf="parent"/>
+       \</android.support.constraint.ConstraintLayout>
