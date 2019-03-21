@@ -39,18 +39,24 @@
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp">
             <Button
+                    android:id="@+id/home_team_toggle"
+                    android:background="@drawable/button_bg"
+                    android:elevation="2dp"
+                    android:layout_margin="5dp"
                     android:text="Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/home_team_toggle"
                     android:layout_weight="1"/>
 
             <Button
                     android:text="Button"
+                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/away_team_toggle"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg"
+                    android:elevation="2dp"/>
         </LinearLayout>
 
         <com.wefika.horizontalpicker.HorizontalPicker

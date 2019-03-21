@@ -12,6 +12,7 @@ import com.vijay.nbashottracker.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.state.IAppState
 import com.vijay.nbashottracker.state.ShotState
 import com.vijay.nbashottracker.state.TeamType
+import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.Observable
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
@@ -50,38 +51,13 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
         mAppState.mSelectedTeam.onNext(teamType)
     }
 
-//    fun getPlayByPlayEvents():Observable<List<EventsItem?>?>{
-//        return mDataModel.getPlayByPlay(mAppState.mSelectedGame.value!!.id)
-//            ?.observeOn(mSchedulerProvider.computation())
-//            ?.map{ pbp:PlayByPlay ->
-//                var allEvents = arrayListOf<EventsItem>()
-//                val periods = pbp!!.periods
-//
-//                periods!![0]!!.events
-//            }!!.toObservable()
-//    }
 
-//    fun getShotMap():Observable<List<ShotState>>{
-//        return mAppState.mSelectedPlayer
-//            .observeOn(mSchedulerProvider.computation())
-//            .debounce(2000, TimeUnit.MILLISECONDS)
-//            .flatMap {
-//                getPlayByPlayEvents()
-//                    .map {
-//                            it-> it
-//                        .filter { i->
-//                            i?.statistics!=null && i?.statistics?.any { s->s?.type.equals("fieldgoal") }
-//                        }
-//                        //.filter { i->
-//                         //   i?.statistics!!.any{s->s?.type!!.equals("fieldgoal") && s?.player?.id!!.equals(it)} }
-//                        .map { i->
-//                            ShotState(Point(i?.location!!.coordY,i?.location!!.coordX),i.eventType!!.contains("pointmade"))
-//                        }
-//                    }
-//            }
-//
-//
-//    }
+    fun getPlayerStats():Observable<PlayerStats>?{
+        return mAppState.mSelectedPlayer
+            ?.observeOn(mSchedulerProvider.computation())
+            ?.filter{it->mAppState.mSelectedGamePlayerStats.value?.containsKey(it)?:false}
+            ?.flatMap { it->Observable.just(mAppState.mSelectedGamePlayerStats.value!![it]) }
+    }
 
 
     fun gameSelected(@NonNull game:Game){

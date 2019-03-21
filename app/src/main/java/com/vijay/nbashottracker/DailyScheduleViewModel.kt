@@ -3,7 +3,9 @@ package com.vijay.nbashottracker
 import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.schedulers.ISchedulerProvider
+import com.vijay.nbashottracker.state.AppState
 import com.vijay.nbashottracker.state.IAppState
+import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.Observable
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
@@ -30,6 +32,14 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
             .flatMap { date -> mDataModel.getGames(date)?.toObservable() }
     }
 
+    fun getPlayerStats():Observable<Map<String,PlayerStats>>{
+        return mAppState
+            .mSelectedGame
+            .observeOn(mSchedulerProvider.computation())
+            .filter { g:Game-> g!= AppState.EMPTY_GAME }
+            .flatMap{game->mDataModel.getPlayerStats(game.id).toObservable()}
+    }
+
     fun getDateSubject():BehaviorSubject<LocalDate>{
         return  mAppState.mSelectedDate
     }
@@ -46,5 +56,7 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
         mAppState.mSelectedGame.onNext(game)
     }
 
-
+    fun setPlayerStats(@NonNull playerStats:Map<String,PlayerStats>){
+        mAppState.mSelectedGamePlayerStats.onNext(playerStats)
+    }
 }

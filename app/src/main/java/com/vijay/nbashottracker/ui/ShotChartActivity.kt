@@ -20,6 +20,7 @@ import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.model.summary.PlayersItem
 import com.vijay.nbashottracker.state.AppState
 import com.vijay.nbashottracker.state.ShotState
+import com.vijay.nbashottracker.state.objects.PlayerStats
 import com.wefika.horizontalpicker.HorizontalPicker
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -124,17 +125,16 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setTeamNames))
 
-//        mCompositeDisposable?.add(mViewModel!!.getShotMap()
-//            .subscribeOn(Schedulers.computation())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(this::loadShotChart))
-
-        //var players: Observable<List<PlayersItem?>>? = mViewModel!!.getTeamPlayers()
         mCompositeDisposable?.add(mViewModel!!.getTeamPlayers()!!
             .doOnError { t:Throwable -> Log.d("ShotChartActivity", t.cause.toString()) }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({setPlayers(it)},{ setPlayers(null)}))
+
+        mCompositeDisposable?.add(mViewModel!!.getPlayerStats()!!
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::loadShotChart))
     }
 
     private fun unbind(){
@@ -168,6 +168,23 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
     override fun finish() {
         super.finish()
 
+    }
+
+    private fun loadShotChart(playerStats:PlayerStats){
+        val group:ViewGroup = findViewById(R.id.shot_chart_main)
+        for(i in 0..100){
+            if(i<playerStats.fieldGoalEvents.count()){
+                var posX = playerStats.fieldGoalEvents[i].positionX!!*group.width
+                var posY = playerStats.fieldGoalEvents[i].positionY!!*group.width
+
+                mShotSpots[i].alpha =1f;
+                mShotSpots[i].animate().x(posX).start()
+                mShotSpots[i].animate().y(posY).start()
+                mShotSpots[i].morph(playerStats.fieldGoalEvents[i].isMade)
+            }else{
+                mShotSpots[i].alpha =0f;
+            }
+        }
     }
 
     private fun loadShotChart(shots:List<ShotState>){

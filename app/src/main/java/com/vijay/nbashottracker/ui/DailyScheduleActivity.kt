@@ -22,6 +22,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
 
 class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
 
@@ -77,6 +78,11 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
         Log.d("DailySchedule", "Bind")
         mCompositeDisposable = CompositeDisposable()
 
+        mCompositeDisposable?.add(mViewModel!!.getPlayerStats()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.computation())
+            .subscribe({mViewModel!!.setPlayerStats(it)},{it.message}))
+
         mCompositeDisposable?.add(mViewModel!!.getGames()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
@@ -91,7 +97,12 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
             .filter { g:Game-> g!=AppState.EMPTY_GAME }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::showShotChart))
+            .subscribe{i->toggleLoadingBar(true)})
+
+        mCompositeDisposable?.add(mViewModel!!.getPlayerStats()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({i->showShotChart()},{it.message}))
     }
 
     private fun unbind(){
@@ -130,7 +141,8 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
         mViewModel?.gameSelected(game)
     }
 
-    private fun showShotChart(game:Game?){
+    private fun showShotChart(){
+        //toggleLoadingBar(false)
         var intent = Intent(this, ShotChartActivity::class.java)
         startActivity(intent)
     }
