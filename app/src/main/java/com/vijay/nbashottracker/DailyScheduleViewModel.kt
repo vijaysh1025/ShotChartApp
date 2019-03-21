@@ -9,6 +9,7 @@ import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.Observable
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
@@ -50,6 +51,10 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
 
     fun getCurrentGameSubject():BehaviorSubject<Game>{
         return mAppState.mSelectedGame
+    }
+
+    fun getPlayerStatsSubject():Subject<Map<String,PlayerStats>>{
+        return mAppState.mSelectedGamePlayerStats
     }
 
     fun gameSelected(@NonNull game:Game){

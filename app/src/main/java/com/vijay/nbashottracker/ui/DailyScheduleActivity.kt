@@ -94,12 +94,13 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
             .subscribe{toggleLoadingBar(show = true)})
 
         mCompositeDisposable?.add(mViewModel!!.getCurrentGameSubject()
-            .filter { g:Game-> g!=AppState.EMPTY_GAME }
+            .filter { g-> g!=AppState.EMPTY_GAME }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{i->toggleLoadingBar(true)})
+            .subscribe{toggleLoadingBar(true)})
 
-        mCompositeDisposable?.add(mViewModel!!.getPlayerStats()
+        mCompositeDisposable?.add(mViewModel!!.getPlayerStatsSubject()
+            .filter { s-> s!=AppState.EMPTY_STATS }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({i->showShotChart()},{it.message}))

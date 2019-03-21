@@ -9,6 +9,7 @@ import com.vijay.nbashottracker.model.playbyplay.Location
 import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
 import com.vijay.nbashottracker.model.summary.PlayersItem
 import com.vijay.nbashottracker.schedulers.ISchedulerProvider
+import com.vijay.nbashottracker.state.AppState
 import com.vijay.nbashottracker.state.IAppState
 import com.vijay.nbashottracker.state.ShotState
 import com.vijay.nbashottracker.state.TeamType
@@ -60,8 +61,12 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
     }
 
 
-    fun gameSelected(@NonNull game:Game){
-        mAppState.mSelectedGame.onNext(game)
+    fun gameCleared(){
+        mAppState.mSelectedGame.onNext(AppState.EMPTY_GAME)
+    }
+
+    fun statsCleared(){
+        mAppState.mSelectedGamePlayerStats.onNext(AppState.EMPTY_STATS)
     }
 
     fun playerSelected(@NonNull playerId:String){

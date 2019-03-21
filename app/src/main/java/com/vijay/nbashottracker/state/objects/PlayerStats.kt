@@ -21,26 +21,26 @@ constructor(_event:EventsItem) {
 
     private val event: EventsItem = _event
 
-    val positionX: Float? = this.setPosX(_event.location!!.coordX)
-    val positionY: Float? = this.setPosX(_event.location!!.coordY)
+    val positionX: Float? = this.setPosY(_event.location)
+    val positionY: Float? = this.setPosX(_event.location)
     val isMade:Boolean = _event.eventType!!.contains("made")
 
-    private fun setPosX(coordX:Int):Float{
+    private fun setPosX(location: Location?):Float{
         var posX = 0f
-        if(coordX.toFloat()<564){
-            posX = coordX.toFloat()/600
+        if(location!!.coordX.toFloat()<564){
+            posX = location!!.coordY.toFloat()/600
         }else{
-            posX = (600-coordX.toFloat())/600
+            posX = (600-location!!.coordY.toFloat())/600
         }
         return posX
     }
 
-    private fun setPosY(coordY:Int):Float{
+    private fun setPosY(location: Location?):Float{
         var posY = 0f
-        if(coordY.toFloat()<564){
-            posY = coordY.toFloat()/600
+        if(location!!.coordX.toFloat()<564){
+            posY = location!!.coordX.toFloat()/600
         }else{
-            posY = (1128-coordY.toFloat())/600
+            posY = (1128-location!!.coordX.toFloat())/600
         }
         return posY
     }

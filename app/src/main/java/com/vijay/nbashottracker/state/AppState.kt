@@ -37,6 +37,8 @@ class AppState private constructor():IAppState{
         //Use this to reset the mSelectedGame BehaviorSubject so that the ShotChart activity is not automatically triggered
         val EMPTY_GAME:Game = Game("",null,null,null)
 
+        val EMPTY_STATS:Map<String,PlayerStats> = mapOf()
+
         val instance: IAppState?
             get() {
                 if (INSTANCE == null) {

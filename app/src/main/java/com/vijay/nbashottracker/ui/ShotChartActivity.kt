@@ -110,7 +110,7 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
             iShotSpot.x = 800.0f*rand.nextFloat()
             iShotSpot.y = 800.0f*rand.nextFloat()
             iShotSpot.alpha = 0f;
-            group.addView(iShotSpot,30,30)
+            group.addView(iShotSpot,40,40)
 
             mShotSpots.add(x, iShotSpot)
 
@@ -158,7 +158,10 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
 
     override fun onBackPressed() {
         super.onBackPressed()
-        mViewModel?.gameSelected(AppState.EMPTY_GAME)
+        mViewModel?.gameCleared()
+        mViewModel?.statsCleared()
+        var intent = Intent(this, DailyScheduleActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onItemSelected(index: Int) {
@@ -167,7 +170,6 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
 
     override fun finish() {
         super.finish()
-
     }
 
     private fun loadShotChart(playerStats:PlayerStats){
@@ -178,34 +180,9 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
                 var posY = playerStats.fieldGoalEvents[i].positionY!!*group.width
 
                 mShotSpots[i].alpha =1f;
-                mShotSpots[i].animate().x(posX).start()
-                mShotSpots[i].animate().y(posY).start()
+                mShotSpots[i].animate().x(posY).start()
+                mShotSpots[i].animate().y(posX).start()
                 mShotSpots[i].morph(playerStats.fieldGoalEvents[i].isMade)
-            }else{
-                mShotSpots[i].alpha =0f;
-            }
-        }
-    }
-
-    private fun loadShotChart(shots:List<ShotState>){
-        val group:ViewGroup = findViewById(R.id.shot_chart_main)
-        for(i in 0..100){
-            if(i<shots.count()){
-                var posX = 0f
-                var posY = 0f
-                if(shots[i].pos.y.toFloat()<564){
-                    posX = shots[i].pos.x.toFloat()/600*group.width
-                    posY = shots[i].pos.y.toFloat()/600*group.width
-                }else{
-                    posX = (600-shots[i].pos.x.toFloat())/600*group.width
-                    posY = (1128-shots[i].pos.y.toFloat())/600*group.width
-                }
-
-
-                mShotSpots[i].alpha =1f;
-                mShotSpots[i].animate().x(posX).start()
-                mShotSpots[i].animate().y(posY).start()
-                mShotSpots[i].morph(shots[i].make)
             }else{
                 mShotSpots[i].alpha =0f;
             }
