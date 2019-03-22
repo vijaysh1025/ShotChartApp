@@ -174,17 +174,18 @@ class ShotChartActivity : AppCompatActivity(),  HorizontalPicker.OnItemSelected{
 
     private fun loadShotChart(playerStats:PlayerStats){
         val group:ViewGroup = findViewById(R.id.shot_chart_main)
+        val width = group.measuredWidth-group.paddingLeft-group.paddingRight
         for(i in 0..100){
             if(i<playerStats.fieldGoalEvents.count()){
-                var posX = playerStats.fieldGoalEvents[i].positionX!!*group.width
-                var posY = playerStats.fieldGoalEvents[i].positionY!!*group.width
+                var posX = playerStats.fieldGoalEvents[i].positionX!!*width
+                var posY = playerStats.fieldGoalEvents[i].positionY!!*width
 
-                mShotSpots[i].alpha =1f;
+                mShotSpots[i].alpha =1f
                 mShotSpots[i].animate().x(posY).start()
                 mShotSpots[i].animate().y(posX).start()
                 mShotSpots[i].morph(playerStats.fieldGoalEvents[i].isMade)
             }else{
-                mShotSpots[i].alpha =0f;
+                mShotSpots[i].alpha =0f
             }
         }
     }

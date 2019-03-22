@@ -1,5 +1,6 @@
 package com.vijay.nbashottracker
 
+import android.text.format.DateUtils
 import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.schedulers.ISchedulerProvider
@@ -11,6 +12,9 @@ import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class DailyScheduleViewModel
@@ -24,6 +28,11 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
 
     @NonNull
     private val mAppState:IAppState = appState;
+
+    val maxDate:Long
+    get() {
+        return Date().time- DateUtils.DAY_IN_MILLIS
+    }
 
     fun getGames():Observable<List<Game>> {
         return mAppState

@@ -14,7 +14,7 @@ import java.time.LocalDate
 class AppState private constructor():IAppState{
 
     @NonNull
-    override val mSelectedDate:BehaviorSubject<LocalDate> = BehaviorSubject.createDefault(LocalDate.now())
+    override val mSelectedDate:BehaviorSubject<LocalDate> = BehaviorSubject.createDefault(LocalDate.now().minusDays(1))
 
     @NonNull
     override val mSelectedGame:BehaviorSubject<Game> = BehaviorSubject.create()

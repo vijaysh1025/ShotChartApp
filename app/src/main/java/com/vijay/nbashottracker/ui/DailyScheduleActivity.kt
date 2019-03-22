@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -21,7 +22,10 @@ import io.reactivex.annotations.Nullable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.time.Instant
 import java.time.LocalDate
+import java.time.temporal.ChronoField
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
@@ -66,7 +70,9 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
     private fun setupViews(){
         mGameListView = findViewById(R.id.gameList)
         mGameListAdapter = GameListAdapter(this)
+
         mDatePicker = findViewById(R.id.datePicker)
+        mDatePicker?.maxDate = mViewModel?.maxDate!!
         mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  mViewModel?.dateSelected(LocalDate.of(year,month+1,day))}
         mLoadingBar = findViewById(R.id.gameListProgressLayout)
 
@@ -116,7 +122,11 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
     }
 
     private fun toggleLoadingBar(show:Boolean){
+
+        mLoadingBar?.animation?.cancel()
+        mLoadingBar?.clearAnimation()
         if(show) {
+
             mLoadingBar?.visibility = View.VISIBLE
             mLoadingBar?.animate()?.apply {
                 interpolator = AccelerateInterpolator()
@@ -131,9 +141,10 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
                 duration = 200
                 alpha(0f)
                 start()
-            }?.withEndAction{
-                mLoadingBar?.visibility = View.INVISIBLE
             }
+//                ?.withEndAction{
+//                mLoadingBar?.visibility = View.INVISIBLE
+//            }
 
         }
     }

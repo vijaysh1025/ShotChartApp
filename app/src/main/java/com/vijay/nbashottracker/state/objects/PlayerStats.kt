@@ -28,9 +28,9 @@ constructor(_event:EventsItem) {
     private fun setPosX(location: Location?):Float{
         var posX = 0f
         if(location!!.coordX.toFloat()<564){
-            posX = location!!.coordY.toFloat()/600
-        }else{
             posX = (600-location!!.coordY.toFloat())/600
+        }else{
+            posX = location!!.coordY.toFloat()/600
         }
         return posX
     }
