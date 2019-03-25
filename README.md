@@ -19,4 +19,4 @@ Coming soon...
 
 ### App In Progress
 
-![test image size](video/github_video.gif){:height="50%" width="50%"}
+<img src="/video/github_video.gif" width="300">
