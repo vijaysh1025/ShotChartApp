@@ -19,4 +19,4 @@ Coming soon...
 
 ### App In Progress
 
-![](video/github_video.gif | width=200)
+![](video/github_video.gif)
