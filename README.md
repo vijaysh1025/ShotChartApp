@@ -1,5 +1,9 @@
 # NBA Shot Mapping Android App
 
+### App In Progress
+
+<img src="/video/github_video.gif" width="300">
+
 ## Overview
 Pick an NBA game from any date and display the shot chart data of any given player from that game. Mobile app technologies have seen a new shift in how developers think and how they develop. This application utilizes the latest mobile technologies to provide the best user experience.
 
@@ -31,6 +35,3 @@ A mutable list of `ShotSpotView` (custom view for made / miss shots) subscribes 
 
 *Important* - All UI interaction should be communicated to the ViewModel and any UI that needs updating from these interactions should be updated by subscribing to ViewModel states (`BehaviorSubject`). 
 
-### App In Progress
-
-<img src="/video/github_video.gif" width="300">
