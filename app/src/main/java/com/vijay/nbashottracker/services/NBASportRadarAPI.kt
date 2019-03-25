@@ -1,5 +1,6 @@
 package com.vijay.nbashottracker.model
 
+import com.google.gson.Gson
 import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
 import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
 import com.vijay.nbashottracker.model.summary.GameSummary
@@ -65,10 +66,11 @@ object APIClient{
                 _instance = Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl(BASE_URL)
+                    .baseUrl(GlobalState.BaseURL)
                     .client(httpClient)
                     .build()
             }
             return _instance
         }
 }
+
