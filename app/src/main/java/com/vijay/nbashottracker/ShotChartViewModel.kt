@@ -17,6 +17,7 @@ import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.Observable
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import timber.log.Timber
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
@@ -45,13 +46,18 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
         return mAppState.mSelectedTeam
             .observeOn(mSchedulerProvider.computation())
             .flatMap{ t:TeamType ->
-                mDataModel.getTeamPlayers(mAppState.mSelectedGame.value!!.id, t==TeamType.HOME)?.toObservable() }
+                mDataModel
+                    .getTeamPlayers(mAppState.mSelectedGame.value!!.id, t==TeamType.HOME)
+                    ?.toObservable() }
     }
 
     fun teamSelected(teamType: TeamType){
         mAppState.mSelectedTeam.onNext(teamType)
     }
 
+    fun getTeamSelected():BehaviorSubject<TeamType>{
+        return mAppState.mSelectedTeam
+    }
 
     fun getPlayerStats():Observable<PlayerStats>?{
         return mAppState.mSelectedPlayer

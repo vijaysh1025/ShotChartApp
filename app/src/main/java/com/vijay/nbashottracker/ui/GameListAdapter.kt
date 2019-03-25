@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.vijay.nbashottracker.R
 import com.vijay.nbashottracker.model.dailyschedule.*
@@ -40,19 +41,29 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
         @NonNull
         private var mHomeText:TextView? = null
         private var mAwayText:TextView? = null
+        private var mHomeLogo:ImageView? = null
+        private var mAwayLogo:ImageView? = null
         private var mGameItemClickListener:GameItemClickListener? = itemClickListener
         private var mGame:Game?=null
         private var isClickable:Boolean = isClickable
         init{
             mHomeText = itemView.findViewById(R.id.homeTeam)
             mAwayText = itemView.findViewById(R.id.awayTeam)
+            mHomeLogo = itemView.findViewById(R.id.homTeamLogo)
+            mAwayLogo = itemView.findViewById(R.id.awayTeamLogo)
             itemView.setOnClickListener(this)
         }
 
         fun bind(@NonNull game: Game){
             mHomeText?.text = (game.home as Team).alias
             mAwayText?.text = (game.away as Team).alias
-            mGame = game;
+            val homeLogoId = itemView.context.resources.getIdentifier((game.home as Team).alias.toLowerCase(),"drawable", itemView.context.packageName)
+            val awayLogoId = itemView.context.resources.getIdentifier((game.away as Team).alias.toLowerCase(),"drawable", itemView.context.packageName)
+            mHomeLogo?.setImageResource(homeLogoId)
+            mAwayLogo?.setImageResource(awayLogoId)
+
+            mGame = game
+
         }
 
         override fun onClick(p0: View?) {
