@@ -13,9 +13,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:hardwareAccelerated="true">
-        <activity android:name=".ui.ShotChartActivity">
+        <activity android:name=".ui.ShotChartActivity"
+        android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.DailyScheduleActivity">
+        <activity android:name=".ui.DailyScheduleActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

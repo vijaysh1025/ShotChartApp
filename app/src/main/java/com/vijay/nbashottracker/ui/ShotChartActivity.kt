@@ -179,7 +179,11 @@ class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListen
             mPlayerPicker?.displayedValues = playerIds
             mPlayerIds.clear()
             mPlayerIds = players.map{it?.id}.toMutableList()
+
+            mPlayerPicker?.value = 0
+            mViewModel?.playerSelected(mPlayerIds[0]!!)
         }
+
     }
 
     override fun onBackPressed() {
