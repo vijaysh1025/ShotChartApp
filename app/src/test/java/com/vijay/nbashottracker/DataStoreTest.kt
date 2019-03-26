@@ -14,6 +14,7 @@ import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,23 +56,6 @@ class DataStoreTest{
         testObserver.assertValue { t->(t.games as List<Game>).get(0).id == "b55c5579-950b-4726-8d36-6467f6caa772" }
     }
 
-//    @Test
-//    fun getPlayByPlayTest(){
-//        val testObserver = TestObserver<PlayByPlay>()
-//        val testScheduler = TestScheduler()
-//        val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
-//
-//        var disposable = APIClient.instance
-//            ?.create<NBASportRadarAPI>()
-//            ?.getPlayByPlay(gameId)
-//            ?.subscribeOn(testScheduler)
-//            ?.subscribe(testObserver)
-//
-//        testScheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS)
-//
-//        testObserver.assertValue { t->t.attendance == 19129}
-//
-//    }
 
     @Test
     fun getPlayerList(){
@@ -97,7 +81,6 @@ class DataStoreTest{
         val testScheduler = TestScheduler()
         val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
 
-        mDataModel = DataModel()
         val disposable = mDataModel
             ?.getFieldFoalEvents(gameId)
             ?.subscribeOn(mSchedulerProvider?.computation())
@@ -105,7 +88,7 @@ class DataStoreTest{
 
         testObserver.assertNoErrors()
 
-        testObserver.awaitDone(5,TimeUnit.SECONDS).assertValue{
+        testObserver.awaitDone(10,TimeUnit.SECONDS).assertValue{
            it.all { t->t?.eventType!!.contains("point") }
         }
     }
@@ -116,7 +99,6 @@ class DataStoreTest{
         val testScheduler = TestScheduler()
         val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
 
-        mDataModel = DataModel()
         val disposable = mDataModel
             ?.getPlayerStats(gameId)
             ?.subscribeOn(mSchedulerProvider?.computation())
@@ -129,4 +111,9 @@ class DataStoreTest{
         }
     }
 
+    @After
+    fun tearDown(){
+        mDataModel = null
+        mSchedulerProvider = null
+    }
 }

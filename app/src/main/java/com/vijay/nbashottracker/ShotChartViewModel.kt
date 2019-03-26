@@ -35,7 +35,7 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
     private val mAppState:IAppState = appState;
 
     init {
-        teamSelected(TeamType.HOME)
+        //teamSelected(TeamType.HOME)
     }
 
     fun getCurrentGameSubject():BehaviorSubject<Game>{

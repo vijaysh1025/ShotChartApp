@@ -26,7 +26,7 @@ class AppState private constructor():IAppState{
     override val mSelectedGamePlayerStats:BehaviorSubject<Map<String,PlayerStats>> = BehaviorSubject.create()
 
     @NonNull
-    override val mSelectedTeam:BehaviorSubject<TeamType> = BehaviorSubject.create()
+    override val mSelectedTeam:BehaviorSubject<TeamType> = BehaviorSubject.createDefault(TeamType.HOME)
 
     @NonNull
     override val mPlayerShots:BehaviorSubject<List<ShotState>> = BehaviorSubject.create()
