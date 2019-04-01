@@ -1,0 +1,19 @@
+package com.vijay.nba.data.entity.playbyplay
+
+
+import com.google.gson.annotations.SerializedName
+
+data class Team(
+
+	@field:SerializedName("market")
+	val market: String? = null,
+
+	@field:SerializedName("sr_id")
+	val srId: String? = null,
+
+	@field:SerializedName("name")
+	val name: String? = null,
+
+	@field:SerializedName("id")
+	val id: String? = null
+)

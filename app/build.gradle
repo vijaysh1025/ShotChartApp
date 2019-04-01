@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     defaultPublishConfig "debug"
@@ -50,6 +51,11 @@ dependencies {
 
     implementation 'com.wefika:horizontal-picker:1.1.1'
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation 'com.google.dagger:dagger-android:2.20'
+    implementation 'com.google.dagger:dagger-android-support:2.20' // if you use the support libraries
+    kapt 'com.google.dagger:dagger-android-processor:2.20'
+    kapt 'com.google.dagger:dagger-compiler:2.20'
 }
 repositories {
     mavenCentral()
