@@ -36,7 +36,7 @@ interface CloudNBADataStore{
     ):Single<GameSummary>
 }
 
-object APIClient{
+object NBATrackingAPIClient{
     private var _instance:Retrofit? = null
     val instance:Retrofit?
         get(){

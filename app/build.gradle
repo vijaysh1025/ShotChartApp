@@ -5,12 +5,12 @@ apply plugin: 'kotlin-kapt'
 
 android {
     defaultPublishConfig "debug"
-    compileSdkVersion 27
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
     defaultConfig {
         applicationId "com.vijay.nbashottracker"
-        minSdkVersion 26
-        targetSdkVersion 27
-        versionCode 1
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        versionCode rootProject.ext.androidVersionCode
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -27,6 +27,26 @@ android {
 }
 
 dependencies {
+    def presentationDependencies = rootProject.ext.presentationDependencies
+    def presentationTestDependencies = rootProject.ext.presentationTestDependencies
+    def developmentDependencies = rootProject.ext.developmentDependencies
+
+    implementation project(':domain')
+    implementation project(':data')
+
+    implementation presentationDependencies.dagger
+    implementation presentationDependencies.butterKnife
+    implementation presentationDependencies.recyclerView
+    implementation presentationDependencies.rxJava
+    implementation presentationDependencies.rxAndroid
+    compileOnly presentationDependencies.javaxAnnotation
+
+    androidTestImplementation presentationTestDependencies.mockito
+    androidTestImplementation presentationTestDependencies.dexmaker
+    androidTestImplementation presentationTestDependencies.dexmakerMockito
+    androidTestImplementation presentationTestDependencies.espresso
+
+    /*
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
@@ -55,7 +75,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android:2.20'
     implementation 'com.google.dagger:dagger-android-support:2.20' // if you use the support libraries
     kapt 'com.google.dagger:dagger-android-processor:2.20'
-    kapt 'com.google.dagger:dagger-compiler:2.20'
+    kapt 'com.google.dagger:dagger-compiler:2.20'*/
 }
 repositories {
     mavenCentral()

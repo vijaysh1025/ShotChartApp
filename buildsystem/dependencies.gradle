@@ -51,8 +51,7 @@ ext {
             dexmaker:           "com.google.dexmaker:dexmaker:${dexmakerVersion}",
             dexmakerMockito:    "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}",
             espresso:           "com.android.support.test.espresso:espresso-core:${espressoVersion}",
-            testingSupportLib:  "com.android.support.test:testing-support-lib:${testingSupportLibVersion}",
-    ]
+     ]
 
     domainDependencies = [
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",

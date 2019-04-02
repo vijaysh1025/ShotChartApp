@@ -1,6 +1,5 @@
 package com.vijay.nba.data.repository
-import com.vijay.nba.data.entity.dailyschedule.DailySchedule
-import com.vijay.nba.data.repository.datasource.APIClient
+import com.vijay.nba.data.repository.datasource.NBATrackingAPIClient
 import com.vijay.nba.data.repository.datasource.CloudNBADataStore
 import com.vijay.nba.domain.model.Game
 import com.vijay.nba.domain.model.Team
@@ -18,7 +17,7 @@ class NBADataRepository : NBARepository {
     val nbaAPI:CloudNBADataStore
         get() {
             if(_nbaAPI == null)
-                _nbaAPI = APIClient.instance!!.create<CloudNBADataStore>()
+                _nbaAPI = NBATrackingAPIClient.instance!!.create<CloudNBADataStore>()
             return _nbaAPI?:throw AssertionError("Still is null")
         }
 
