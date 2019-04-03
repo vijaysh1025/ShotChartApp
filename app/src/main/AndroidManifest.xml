@@ -3,6 +3,8 @@
           package="com.vijay.nbashottracker">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true" />
 
     <application
             android:name=".ShotTrackerApplication"
@@ -18,12 +20,22 @@
         </activity>
         <activity android:name=".ui.DailyScheduleActivity"
                   android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name=".ui.ShotChartARActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <meta-data android:name="com.google.ar.core" android:value="required" />
     </application>
 
 </manifest>

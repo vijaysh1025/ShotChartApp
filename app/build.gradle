@@ -50,6 +50,8 @@ dependencies {
 
     implementation 'com.wefika:horizontal-picker:1.1.1'
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.4.0"
 }
 repositories {
     mavenCentral()

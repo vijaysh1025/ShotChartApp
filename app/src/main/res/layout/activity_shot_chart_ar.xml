@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/shot_chart_ar_main"
+        android:background="@color/colorPrimaryLight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.ShotChartARActivity">
+
+    <fragment
+            android:id="@+id/sceneform_fragment"
+            android:name="com.google.ar.sceneform.ux.ArFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    <Button
+            android:id="@+id/place_object"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+</android.support.constraint.ConstraintLayout>
