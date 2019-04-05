@@ -14,6 +14,7 @@ import android.widget.DatePicker
 import com.vijay.nbashottracker.DailyScheduleViewModel
 import com.vijay.nbashottracker.R
 import com.vijay.nbashottracker.ShotTrackerApplication
+import com.vijay.nbashottracker.di.ApplicationComponent
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.state.AppState
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,14 +28,14 @@ import java.time.LocalDate
 import java.time.temporal.ChronoField
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
 
-    @NonNull
-    private var mViewModel: DailyScheduleViewModel?=null
+    @Inject lateinit var mViewModel: DailyScheduleViewModel
 
     @NonNull
     private var mDatePicker:DatePicker?=null
@@ -48,12 +49,15 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
     @Nullable
     private  var mLoadingBar:ConstraintLayout?=null
 
+    val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+        (application as ShotTrackerApplication).appComponent
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_daily_schedule)
-
-        mViewModel = (application as ShotTrackerApplication).getDailyScheduleViewModel()
+        appComponent.inject(this)
         setupViews()
     }
 
@@ -72,8 +76,8 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
         mGameListAdapter = GameListAdapter(this)
 
         mDatePicker = findViewById(R.id.datePicker)
-        mDatePicker?.maxDate = mViewModel?.maxDate!!
-        mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  mViewModel?.dateSelected(LocalDate.of(year,month+1,day))}
+        mDatePicker?.maxDate = mViewModel.maxDate
+        mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  mViewModel.dateSelected(LocalDate.of(year,month+1,day))}
         mLoadingBar = findViewById(R.id.gameListProgressLayout)
 
         mGameListView?.adapter = mGameListAdapter
@@ -84,28 +88,28 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
         Log.d("DailySchedule", "Bind")
         mCompositeDisposable = CompositeDisposable()
 
-        mCompositeDisposable?.add(mViewModel!!.getPlayerStats()
+        mCompositeDisposable?.add(mViewModel.getPlayerStats()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
-            .subscribe({mViewModel!!.setPlayerStats(it)},{it.message}))
+            .subscribe({mViewModel.setPlayerStats(it)},{it.message}))
 
-        mCompositeDisposable?.add(mViewModel!!.getGames()
+        mCompositeDisposable?.add(mViewModel.getGames()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setGames))
 
-        mCompositeDisposable?.add(mViewModel!!.getDateSubject()
+        mCompositeDisposable?.add(mViewModel.getDateSubject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{toggleLoadingBar(show = true)})
 
-        mCompositeDisposable?.add(mViewModel!!.getCurrentGameSubject()
+        mCompositeDisposable?.add(mViewModel.getCurrentGameSubject()
             .filter { g-> g!=AppState.EMPTY_GAME }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe{toggleLoadingBar(true)})
 
-        mCompositeDisposable?.add(mViewModel!!.getPlayerStatsSubject()
+        mCompositeDisposable?.add(mViewModel.getPlayerStatsSubject()
             .filter { s-> s!=AppState.EMPTY_STATS }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())

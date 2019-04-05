@@ -8,7 +8,7 @@ const val BASE_URL ="https://api.sportradar.us"
 const val API_KEY = "fkgfzb9terxk7289s6t3u5bf"
 
 object GlobalState {
-    var BaseURL:String?=null
+    var BaseURL:String= BASE_URL
     get() {
         if(DEV)
             return DEV_URL

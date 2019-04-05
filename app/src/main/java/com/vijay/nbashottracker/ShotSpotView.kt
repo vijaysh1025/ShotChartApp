@@ -29,18 +29,11 @@ class ShotSpotView : ImageView {
     }
 
     constructor(context: Context) : super(context) {
-        init(null, 0)
+        init()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
-    }
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        init(attrs, defStyle)
-    }
-
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
+    private fun init() {
         mIsShowingCircle = true
         mCircleToXAVD = context.getDrawable(R.drawable.shot_spot_circle_to_x) as AnimatedVectorDrawable
         mXToCircleAVD = context.getDrawable(R.drawable.shot_spot_x_to_circle) as AnimatedVectorDrawable

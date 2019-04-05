@@ -15,9 +15,11 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.create
 import java.lang.AssertionError
 import java.time.LocalDate
+import javax.inject.Inject
 
 
-class DataModel : IDataModel{
+class DataModel
+    @Inject constructor(): IDataModel{
 
     private var _nbaAPI:NBASportRadarAPI?=null
     val nbaAPI:NBASportRadarAPI
@@ -30,30 +32,30 @@ class DataModel : IDataModel{
     @NonNull
     override fun getGames(localDate:LocalDate): Single<List<Game>>? {
         return nbaAPI
-            ?.getScheduleOfDay(localDate.year.toString(), localDate.monthValue.toString(), localDate.dayOfMonth.toString())
-            ?.subscribeOn(Schedulers.io())
-            ?.map{it: DailySchedule -> it.games as List<Game>}
+            .getScheduleOfDay(localDate.year.toString(), localDate.monthValue.toString(), localDate.dayOfMonth.toString())
+            .subscribeOn(Schedulers.io())
+            .map{it.games as? List<Game>}
     }
 
     @NonNull
     override fun getGameEvents(gameId:String):Single<List<EventsItem?>?>{
         return nbaAPI
-            ?.getPlayByPlay(gameId)
-            ?.subscribeOn(Schedulers.io())
-            ?.map { t->combineEvents(t.periods) }
+            .getPlayByPlay(gameId)
+            .subscribeOn(Schedulers.io())
+            .map { t->combineEvents(t.periods) }
     }
 
     override fun getFieldFoalEvents(gameId:String):Single<List<EventsItem?>?>{
         return getGameEvents(gameId)
-            ?.flatMap { it-> Single.just(it.filter { i->i?.eventType!!.contains("point") } )}
+            .flatMap { it-> Single.just(it.filter { i->i?.eventType!!.contains("point") } )}
     }
 
     @NonNull
     override fun getTeamPlayers(gameId:String, isHomeTeam:Boolean):Single<List<PlayersItem?>>?{
         return nbaAPI
-            ?.getGameSummary(gameId)
-            ?.subscribeOn(Schedulers.io())
-            ?.map{it:GameSummary -> if(isHomeTeam) it.home?.players else it.away?.players}
+            .getGameSummary(gameId)
+            .subscribeOn(Schedulers.io())
+            .map{it:GameSummary -> if(isHomeTeam) it.home?.players else it.away?.players}
     }
 
     private fun combineEvents(periods:List<PeriodsItem?>?):List<EventsItem?>?{
@@ -63,7 +65,7 @@ class DataModel : IDataModel{
 
     override fun getPlayerStats(gameId: String):Single<Map<String,PlayerStats>>{
         return getFieldFoalEvents(gameId)
-            ?.flatMap {
+            .flatMap {
                 Single.just(getPlayerStatsMap(it))
             }
     }
@@ -71,13 +73,13 @@ class DataModel : IDataModel{
     private fun getPlayerStatsMap(eventList:List<EventsItem?>):MutableMap<String,PlayerStats>{
         var playerStats:MutableMap<String,PlayerStats> = mutableMapOf()
         for(e in eventList){
-            val player = e?.statistics?.find { it?.type =="fieldgoal" }?.player?:null
+            val player = e?.statistics?.find { it?.type =="fieldgoal" }?.player
             if(player!=null)
             {
                 if(!playerStats.containsKey(player.id))
                     playerStats.put(player.id!!, PlayerStats(player))
 
-                playerStats[player.id!!]?.fieldGoalEvents?.add(FieldGoalEvent(e!!))
+                playerStats[player.id!!]?.fieldGoalEvents?.add(FieldGoalEvent(e))
             }
         }
         return playerStats

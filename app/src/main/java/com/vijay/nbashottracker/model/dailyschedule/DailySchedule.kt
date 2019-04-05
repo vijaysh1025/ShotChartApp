@@ -3,7 +3,7 @@ package com.vijay.nbashottracker.model.dailyschedule
 import com.google.gson.annotations.SerializedName
 
 data class DailySchedule(@SerializedName("games") private val _games:List<Game>){
-    val games get() = _games?:""
+    val games get() = _games
 }
 
 data class Game(

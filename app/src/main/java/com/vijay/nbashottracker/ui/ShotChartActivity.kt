@@ -31,15 +31,15 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_shot_chart.*
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
 class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListener{
-
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
 
-    @NonNull
-    private var mViewModel: ShotChartViewModel?=null
+    @Inject
+    lateinit var mViewModel: ShotChartViewModel
 
     @NonNull
     private var mHomeTeamToggle: CardView?=null
@@ -77,7 +77,6 @@ class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shot_chart)
 
-        mViewModel = (application as ShotTrackerApplication).getShotChartViewModel()
         setupViews()
     }
 
@@ -105,11 +104,11 @@ class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListen
         mPlayerPicker?.setOnValueChangedListener(this)
 
         mHomeTeamToggle?.setOnClickListener {
-            mViewModel?.teamSelected(TeamType.HOME)
+            mViewModel.teamSelected(TeamType.HOME)
         }
 
         mAwayTeamToggle?.setOnClickListener {
-            mViewModel?.teamSelected(TeamType.AWAY)
+            mViewModel.teamSelected(TeamType.AWAY)
         }
 
 
@@ -134,23 +133,23 @@ class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListen
     private fun bind(){
 
         mCompositeDisposable = CompositeDisposable()
-        mCompositeDisposable?.add(mViewModel!!.getCurrentGameSubject()
+        mCompositeDisposable?.add(mViewModel.getCurrentGameSubject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setTeamNames))
 
-        mCompositeDisposable?.add(mViewModel!!.getTeamPlayers()!!
+        mCompositeDisposable?.add(mViewModel.getTeamPlayers()!!
             .doOnError { t:Throwable -> Log.d("ShotChartActivity", t.cause.toString()) }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({setPlayers(it)},{ setPlayers(null)}))
 
-        mCompositeDisposable?.add(mViewModel!!.getPlayerStats()!!
+        mCompositeDisposable?.add(mViewModel.getPlayerStats()!!
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::loadShotChart))
 
-        mCompositeDisposable?.add(mViewModel!!.getTeamSelected()
+        mCompositeDisposable?.add(mViewModel.getTeamSelected()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::loadTeamData))
@@ -172,7 +171,7 @@ class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListen
         if(players==null)
             mPlayerPicker?.displayedValues = arrayOf("30","32","35","45","43")
         else {
-            val playerIds= players?.map { it?.jerseyNumber.toString() }.toTypedArray()
+            val playerIds= players.map { it?.jerseyNumber.toString() }.toTypedArray()
 
             mPlayerPicker?.minValue = 0
             mPlayerPicker?.maxValue = playerIds.count()-1
@@ -181,21 +180,21 @@ class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListen
             mPlayerIds = players.map{it?.id}.toMutableList()
 
             mPlayerPicker?.value = 0
-            mViewModel?.playerSelected(mPlayerIds[0]!!)
+            mViewModel.playerSelected(mPlayerIds[0]!!)
         }
 
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        mViewModel?.gameCleared()
-        mViewModel?.statsCleared()
+        mViewModel.gameCleared()
+        mViewModel.statsCleared()
         var intent = Intent(this, DailyScheduleActivity::class.java)
         startActivity(intent)
     }
 
     override fun onValueChange(p0: NumberPicker?, p1: Int, p2: Int) {
-        mViewModel?.playerSelected(mPlayerIds[p0!!.value]!!)
+        mViewModel.playerSelected(mPlayerIds[p0!!.value]!!)
     }
 
     override fun finish() {

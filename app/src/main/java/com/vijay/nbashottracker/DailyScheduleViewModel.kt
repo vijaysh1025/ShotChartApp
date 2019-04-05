@@ -16,9 +16,10 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class DailyScheduleViewModel
-constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedulerProvider, @NonNull appState:IAppState){
+@Inject constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedulerProvider, @NonNull appState:IAppState){
 
     @NonNull
     private val mDataModel:IDataModel = dataModel

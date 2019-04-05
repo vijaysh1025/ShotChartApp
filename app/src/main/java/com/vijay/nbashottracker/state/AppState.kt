@@ -39,12 +39,12 @@ class AppState private constructor():IAppState{
 
         val EMPTY_STATS:Map<String,PlayerStats> = mapOf()
 
-        val instance: IAppState?
+        val instance: IAppState
             get() {
                 if (INSTANCE == null) {
                     INSTANCE = AppState()
                 }
-                return INSTANCE
+                return INSTANCE!!
             }
     }
 }

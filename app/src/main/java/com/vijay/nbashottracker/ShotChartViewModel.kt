@@ -21,9 +21,10 @@ import io.reactivex.subjects.Subject
 import timber.log.Timber
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class ShotChartViewModel
-constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedulerProvider, @NonNull appState:IAppState){
+@Inject constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedulerProvider, @NonNull appState:IAppState){
 
     @NonNull
     private val mDataModel:IDataModel = dataModel
@@ -61,7 +62,7 @@ constructor(@NonNull dataModel: IDataModel, @NonNull schedulerProvider:ISchedule
 
     fun getPlayerStats():Observable<PlayerStats>?{
         return mAppState.mSelectedPlayer
-            ?.observeOn(mSchedulerProvider.computation())
+            .observeOn(mSchedulerProvider.computation())
             ?.filter{it->mAppState.mSelectedGamePlayerStats.value?.containsKey(it)?:false}
             ?.flatMap { it->Observable.just(mAppState.mSelectedGamePlayerStats.value!![it]) }
     }
