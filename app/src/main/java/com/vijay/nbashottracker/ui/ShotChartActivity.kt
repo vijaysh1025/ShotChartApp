@@ -15,6 +15,7 @@ import com.vijay.nbashottracker.R
 import com.vijay.nbashottracker.ShotChartViewModel
 import com.vijay.nbashottracker.ShotSpotView
 import com.vijay.nbashottracker.ShotTrackerApplication
+import com.vijay.nbashottracker.core.platform.BaseActivity
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.model.dailyschedule.Team
 import com.vijay.nbashottracker.model.summary.PlayersItem
@@ -33,7 +34,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListener{
+class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
@@ -76,7 +77,7 @@ class ShotChartActivity : AppCompatActivity(),  NumberPicker.OnValueChangeListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shot_chart)
-
+        appComponent.inject(this)
         setupViews()
     }
 

@@ -3,7 +3,7 @@ package com.vijay.nbashottracker
 import android.text.format.DateUtils
 import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.Game
-import com.vijay.nbashottracker.schedulers.ISchedulerProvider
+import com.vijay.nbashottracker.core.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.state.AppState
 import com.vijay.nbashottracker.state.IAppState
 import com.vijay.nbashottracker.state.objects.PlayerStats
@@ -12,8 +12,6 @@ import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

@@ -4,13 +4,9 @@ import android.app.Application
 import com.vijay.nbashottracker.datamodel.DataModel
 import io.reactivex.annotations.NonNull
 import com.vijay.nbashottracker.datamodel.IDataModel
-import com.vijay.nbashottracker.di.ApplicationComponent
-import com.vijay.nbashottracker.di.ApplicationModule
-import com.vijay.nbashottracker.di.DaggerApplicationComponent
-import com.vijay.nbashottracker.schedulers.ISchedulerProvider
-import com.vijay.nbashottracker.schedulers.SchedulerProvider
-import com.vijay.nbashottracker.state.AppState
-import com.vijay.nbashottracker.state.IAppState
+import com.vijay.nbashottracker.core.di.ApplicationComponent
+import com.vijay.nbashottracker.core.di.ApplicationModule
+import com.vijay.nbashottracker.core.di.DaggerApplicationComponent
 
 class ShotTrackerApplication : Application(){
 

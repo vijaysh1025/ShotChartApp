@@ -4,8 +4,7 @@ import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.*
 import com.vijay.nbashottracker.model.playbyplay.Player
 import com.vijay.nbashottracker.model.summary.PlayersItem
-import com.vijay.nbashottracker.schedulers.TestSchedulerProvider
-import com.vijay.nbashottracker.state.AppState
+import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
 import com.vijay.nbashottracker.state.IAppState
 import com.vijay.nbashottracker.state.TeamType
 import com.vijay.nbashottracker.state.objects.PlayerStats
@@ -18,7 +17,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import java.lang.Exception
-import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 class ShotChartViewModelTest{

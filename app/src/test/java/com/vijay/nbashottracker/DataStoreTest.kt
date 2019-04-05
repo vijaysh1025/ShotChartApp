@@ -1,6 +1,5 @@
 package com.vijay.nbashottracker
 
-import android.provider.ContactsContract
 import com.vijay.nbashottracker.datamodel.DataModel
 import com.vijay.nbashottracker.model.APIClient
 import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
@@ -8,11 +7,9 @@ import com.vijay.nbashottracker.model.NBASportRadarAPI
 import com.vijay.nbashottracker.model.dailyschedule.*
 import com.vijay.nbashottracker.model.playbyplay.*
 import com.vijay.nbashottracker.model.summary.GameSummary
-import com.vijay.nbashottracker.schedulers.TestSchedulerProvider
+import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
 import com.vijay.nbashottracker.state.objects.PlayerStats
-import io.reactivex.Single
 import io.reactivex.observers.TestObserver
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import org.junit.After
 import org.junit.Before

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -14,7 +13,8 @@ import android.widget.DatePicker
 import com.vijay.nbashottracker.DailyScheduleViewModel
 import com.vijay.nbashottracker.R
 import com.vijay.nbashottracker.ShotTrackerApplication
-import com.vijay.nbashottracker.di.ApplicationComponent
+import com.vijay.nbashottracker.core.di.ApplicationComponent
+import com.vijay.nbashottracker.core.platform.BaseActivity
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.state.AppState
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,15 +22,10 @@ import io.reactivex.annotations.NonNull
 import io.reactivex.annotations.Nullable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
-import java.time.Instant
 import java.time.LocalDate
-import java.time.temporal.ChronoField
-import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
+class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
@@ -48,10 +43,6 @@ class DailyScheduleActivity : AppCompatActivity(), GameItemClickListener {
 
     @Nullable
     private  var mLoadingBar:ConstraintLayout?=null
-
-    val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
-        (application as ShotTrackerApplication).appComponent
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -2,10 +2,6 @@ package com.vijay.nbashottracker.state
 
 import android.graphics.Point
 import com.vijay.nbashottracker.model.dailyschedule.Game
-import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
-import com.vijay.nbashottracker.model.playbyplay.Team
-import com.vijay.nbashottracker.schedulers.ISchedulerProvider
-import com.vijay.nbashottracker.schedulers.SchedulerProvider
 import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject

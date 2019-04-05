@@ -1,4 +1,4 @@
-package com.vijay.nbashottracker.schedulers
+package com.vijay.nbashottracker.core.schedulers
 
 
 import io.reactivex.Scheduler

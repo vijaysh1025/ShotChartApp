@@ -1,26 +1,16 @@
 package com.vijay.nbashottracker
 
-import android.graphics.Point
-import android.util.Log
 import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.Game
-import com.vijay.nbashottracker.model.playbyplay.EventsItem
-import com.vijay.nbashottracker.model.playbyplay.Location
-import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
 import com.vijay.nbashottracker.model.summary.PlayersItem
-import com.vijay.nbashottracker.schedulers.ISchedulerProvider
+import com.vijay.nbashottracker.core.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.state.AppState
 import com.vijay.nbashottracker.state.IAppState
-import com.vijay.nbashottracker.state.ShotState
 import com.vijay.nbashottracker.state.TeamType
 import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.Observable
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
-import timber.log.Timber
-import java.time.LocalDate
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ShotChartViewModel
