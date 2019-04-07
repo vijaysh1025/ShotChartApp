@@ -1,36 +1,31 @@
 package com.vijay.nbashottracker.ui
 
 import android.content.Intent
-import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.CardView
-import android.util.AttributeSet
+import androidx.cardview.widget.CardView
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.widget.*
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.vijay.nbashottracker.R
 import com.vijay.nbashottracker.ShotChartViewModel
 import com.vijay.nbashottracker.ShotSpotView
-import com.vijay.nbashottracker.ShotTrackerApplication
 import com.vijay.nbashottracker.core.platform.BaseActivity
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.model.dailyschedule.Team
-import com.vijay.nbashottracker.model.summary.PlayersItem
-import com.vijay.nbashottracker.state.AppState
-import com.vijay.nbashottracker.state.ShotState
+import com.vijay.nbashottracker.model.summary.Player
 import com.vijay.nbashottracker.state.TeamType
+import com.vijay.nbashottracker.state.objects.GameItem
+import com.vijay.nbashottracker.state.objects.PlayerItem
 import com.vijay.nbashottracker.state.objects.PlayerStats
-import com.wefika.horizontalpicker.HorizontalPicker
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_shot_chart.*
-import timber.log.Timber
+import kotlinx.android.synthetic.main.game_item.view.*
 import java.util.*
 import javax.inject.Inject
 
@@ -42,30 +37,37 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
     @Inject
     lateinit var mViewModel: ShotChartViewModel
 
-    @NonNull
-    private var mHomeTeamToggle: CardView?=null
+    @JvmField
+    @BindView(R.id.home_team_toggle)
+    var mHomeTeamToggle: CardView?=null
 
-    @NonNull
-    private var mAwayTeamToggle: CardView?=null
+    @JvmField
+    @BindView(R.id.away_team_toggle)
+    var mAwayTeamToggle: CardView?=null
 
-    @NonNull
-    private var mHomeTeamLogo:ImageView?=null
+    @JvmField
+    @BindView(R.id.home_team_button_logo)
+    var mHomeTeamLogo:ImageView?=null
 
-    @NonNull
-    private var mAwayTeamLogo:ImageView?=null
+    @JvmField
+    @BindView(R.id.away_team_button_logo)
+    var mAwayTeamLogo:ImageView?=null
 
+    @JvmField
+    @BindView(R.id.player_picker)
+    var mPlayerPicker:NumberPicker?=null
 
-    @NonNull
-    private var mPlayerPicker:NumberPicker?=null
+    @JvmField
+    @BindView(R.id.player_name)
+    var mPlayerName:TextView?=null
 
-    @NonNull
-    private var mPlayerName:TextView?=null
+    @JvmField
+    @BindView(R.id.player_number)
+    var mPlayerNumber:TextView?=null
 
-    @NonNull
-    private var mPlayerNumber:TextView?=null
-
-    @NonNull
-    private var mCourtMapView:CourtMapView?=null
+    @JvmField
+    @BindView(R.id.court_map_view)
+    var mCourtMapView:CourtMapView?=null
 
     @NonNull
     private var mShotSpots:MutableList<ShotSpotView> = mutableListOf()
@@ -73,11 +75,12 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
     @NonNull
     private var mPlayerIds:MutableList<String?> = mutableListOf()
 
-
+    private lateinit var unbinder: Unbinder
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shot_chart)
         appComponent.inject(this)
+        unbinder = ButterKnife.bind(this)
         setupViews()
     }
 
@@ -92,16 +95,12 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         unbind()
     }
 
-    private fun setupViews(){
-        mHomeTeamLogo = findViewById(R.id.home_team_button_logo)
-        mAwayTeamLogo = findViewById(R.id.away_team_button_logo)
-        mHomeTeamToggle = findViewById(R.id.home_team_toggle)
-        mAwayTeamToggle = findViewById(R.id.away_team_toggle)
-        mPlayerPicker = findViewById(R.id.player_picker)
-        mPlayerName = findViewById(R.id.player_name)
-        mPlayerNumber = findViewById(R.id.player_number)
-        mCourtMapView = findViewById(R.id.court_map_view)
+    override fun onDestroy() {
+        super.onDestroy()
+        unbinder.unbind()
+    }
 
+    private fun setupViews(){
         mPlayerPicker?.setOnValueChangedListener(this)
 
         mHomeTeamToggle?.setOnClickListener {
@@ -111,7 +110,6 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         mAwayTeamToggle?.setOnClickListener {
             mViewModel.teamSelected(TeamType.AWAY)
         }
-
 
         val group:ViewGroup = findViewById(R.id.shot_chart_main)
 
@@ -160,19 +158,19 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         mCompositeDisposable?.clear()
     }
 
-    private fun setTeamNames(game:Game){
-        val homeLogoId = resources.getIdentifier((game.home as Team).alias.toLowerCase(),"drawable", this.applicationContext.packageName)
-        val awayLogoId = resources.getIdentifier((game.away as Team).alias.toLowerCase(),"drawable", this.applicationContext.packageName)
+    private fun setTeamNames(game: GameItem){
+        val homeLogoId = resources.getIdentifier(game.homeTeam.alias.toLowerCase(),"drawable", this.applicationContext.packageName)
+        val awayLogoId = resources.getIdentifier(game.awayTeam.alias.toLowerCase(),"drawable", this.applicationContext.packageName)
 
         mHomeTeamLogo?.setImageResource(homeLogoId)
         mAwayTeamLogo?.setImageResource(awayLogoId)
     }
 
-    private fun setPlayers(players:List<PlayersItem?>?){
+    private fun setPlayers(players:List<PlayerItem?>?){
         if(players==null)
             mPlayerPicker?.displayedValues = arrayOf("30","32","35","45","43")
         else {
-            val playerIds= players.map { it?.jerseyNumber.toString() }.toTypedArray()
+            val playerIds= players.map { it?.number.toString() }.toTypedArray()
 
             mPlayerPicker?.minValue = 0
             mPlayerPicker?.maxValue = playerIds.count()-1

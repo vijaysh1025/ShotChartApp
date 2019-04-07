@@ -36,41 +36,4 @@ interface NBASportRadarAPI{
     ):Single<GameSummary>
 }
 
-object APIClient{
-    private var _instance:Retrofit? = null
-    val instance:Retrofit?
-        get(){
-
-            // Handle auto add API Key Parameter to url
-            val httpClient = OkHttpClient.Builder().addInterceptor(object : Interceptor {
-                @Throws(IOException::class)
-                override fun intercept(chain: Interceptor.Chain): Response {
-                    val original = chain.request()
-                    val originalHttpUrl = original.url()
-
-                    val url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("api_key", API_KEY)
-                        .build()
-
-                    // Request customization: add request headers
-                    val requestBuilder = original.newBuilder()
-                        .url(url)
-
-                    val request = requestBuilder.build()
-                    return chain.proceed(request)
-                }
-            }).build()
-
-            //Create Retrofit client
-            if(_instance==null){
-                _instance = Retrofit.Builder()
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl(GlobalState.BaseURL)
-                    .client(httpClient)
-                    .build()
-            }
-            return _instance
-        }
-}
 

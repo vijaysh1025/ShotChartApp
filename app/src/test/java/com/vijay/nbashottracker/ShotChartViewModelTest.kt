@@ -1,9 +1,6 @@
 package com.vijay.nbashottracker
 
-import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.*
-import com.vijay.nbashottracker.model.playbyplay.Player
-import com.vijay.nbashottracker.model.summary.PlayersItem
 import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
 import com.vijay.nbashottracker.state.IAppState
 import com.vijay.nbashottracker.state.TeamType
@@ -41,7 +38,7 @@ class ShotChartViewModelTest{
     @Test
     fun testGetTeamPlayers_emitsPlayerList_whenTeamSelected(){
         val game = Game("000",null,null,null)
-        val player1 = PlayersItem("111","Test Player",null,null,null,"00")
+        val player1 = com.vijay.nbashottracker.model.summary.Player("111","Test Player",null,null,null,"00")
         val players = listOf(player1)
 
         Mockito.`when`(mDataModel?.getTeamPlayers(game.id,true)).thenReturn(Single.just(players))
@@ -49,7 +46,7 @@ class ShotChartViewModelTest{
         Mockito.`when`(mAppState?.mSelectedGame).thenReturn(BehaviorSubject.createDefault(game))
 
 
-        var testObserver= TestObserver<List<PlayersItem?>>()
+        var testObserver= TestObserver<List<com.vijay.nbashottracker.model.summary.Player?>>()
 
         mShotChartViewModel!!.getTeamPlayers()?.subscribeOn(mSchedulerProvider?.computation())?.subscribe(testObserver)
 

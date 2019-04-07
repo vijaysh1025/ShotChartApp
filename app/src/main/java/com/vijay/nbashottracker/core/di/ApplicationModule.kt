@@ -1,14 +1,14 @@
 package com.vijay.nbashottracker.core.di
 
 import android.content.Context
-import com.vijay.nbashottracker.ShotChartViewModel
 import com.vijay.nbashottracker.ShotTrackerApplication
-import com.vijay.nbashottracker.datamodel.DataModel
-import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.core.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.core.schedulers.SchedulerProvider
+import com.vijay.nbashottracker.services.NBAStatsRepository
+import com.vijay.nbashottracker.services.Network
 import com.vijay.nbashottracker.state.AppState
 import com.vijay.nbashottracker.state.IAppState
+import com.vijay.nbashottracker.usecases.*
 import com.vijay.nbashottracker.utilities.API_KEY
 import com.vijay.nbashottracker.utilities.GlobalState
 import dagger.Module
@@ -26,11 +26,11 @@ import javax.inject.Singleton
 class ApplicationModule(private val application:ShotTrackerApplication){
     @Provides @Singleton fun provideApplicationContext():Context = application
 
-    @Provides @Singleton fun provideUseCase():IDataModel = DataModel()
+    @Provides @Singleton fun provideNBAStatsRepository(nbaStatsRepository:Network):NBAStatsRepository = nbaStatsRepository
 
     @Provides @Singleton fun provideSchedulerProvider():ISchedulerProvider = SchedulerProvider()
 
-    @Provides @Singleton fun provideAppState():IAppState = AppState.instance
+    @Provides @Singleton fun provideAppState():IAppState = AppState()
 
     @Provides @Singleton fun provideRetrofit():Retrofit{
         return Retrofit.Builder()

@@ -44,6 +44,4 @@ constructor(_event:EventsItem) {
         }
         return posY
     }
-
-
 }

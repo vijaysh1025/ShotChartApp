@@ -19,7 +19,7 @@ data class Home(
 	val scoring: List<Any?>? = null,
 
 	@field:SerializedName("players")
-	val players: List<PlayersItem>? = null,
+	val players: List<Player>? = null,
 
 	@field:SerializedName("name")
 	val name: String? = null,

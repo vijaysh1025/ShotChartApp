@@ -1,22 +1,23 @@
 package com.vijay.nbashottracker.ui
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.DatePicker
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.vijay.nbashottracker.DailyScheduleViewModel
 import com.vijay.nbashottracker.R
-import com.vijay.nbashottracker.ShotTrackerApplication
-import com.vijay.nbashottracker.core.di.ApplicationComponent
 import com.vijay.nbashottracker.core.platform.BaseActivity
 import com.vijay.nbashottracker.model.dailyschedule.Game
 import com.vijay.nbashottracker.state.AppState
+import com.vijay.nbashottracker.state.objects.GameItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.annotations.Nullable
@@ -30,25 +31,30 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
 
-    @Inject lateinit var mViewModel: DailyScheduleViewModel
+    @Inject lateinit var viewModel: DailyScheduleViewModel
 
-    @NonNull
-    private var mDatePicker:DatePicker?=null
+    @JvmField
+    @BindView(R.id.datePicker)
+    var mDatePicker:DatePicker?=null
+
+    @JvmField
+    @BindView(R.id.gameListProgressLayout)
+    var mLoadingBar: ConstraintLayout?=null
+
+    @JvmField
+    @BindView(R.id.gameList)
+    var mGameListView: RecyclerView?=null
 
     @Nullable
-    private var mGameListView:RecyclerView?=null
+    var mGameListAdapter: GameListAdapter?=null
 
-    @Nullable
-    private var mGameListAdapter: GameListAdapter?=null
-
-    @Nullable
-    private  var mLoadingBar:ConstraintLayout?=null
-
+    private lateinit var unbinder:Unbinder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_daily_schedule)
         appComponent.inject(this)
+        unbinder = ButterKnife.bind(this)
         setupViews()
     }
 
@@ -62,56 +68,73 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
         unbind()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unbinder.unbind()
+    }
+
     private fun setupViews(){
-        mGameListView = findViewById(R.id.gameList)
         mGameListAdapter = GameListAdapter(this)
 
-        mDatePicker = findViewById(R.id.datePicker)
-        mDatePicker?.maxDate = mViewModel.maxDate
-        mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  mViewModel.dateSelected(LocalDate.of(year,month+1,day))}
-        mLoadingBar = findViewById(R.id.gameListProgressLayout)
+        mDatePicker?.maxDate = viewModel.maxDate
+        mDatePicker?.setOnDateChangedListener {datePicker: DatePicker?, year: Int, month: Int, day: Int ->  viewModel.dateSelected(LocalDate.of(year,month+1,day))}
 
         mGameListView?.adapter = mGameListAdapter
         mGameListView?.layoutManager = LinearLayoutManager(this)
     }
 
     private fun bind(){
-        Log.d("DailySchedule", "Bind")
+
         mCompositeDisposable = CompositeDisposable()
 
-        mCompositeDisposable?.add(mViewModel.getPlayerStats()
+        mCompositeDisposable?.add(viewModel.getPlayerStats()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
-            .subscribe({mViewModel.setPlayerStats(it)},{it.message}))
+            .subscribe(
+                {viewModel.setPlayerStats(it)},
+                {onError(it)}
+            ))
 
-        mCompositeDisposable?.add(mViewModel.getGames()
+        mCompositeDisposable?.add(viewModel.getGames()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::setGames))
+            .subscribe(
+                {setGames(it)},
+                {onError(it)}
+            ))
 
-        mCompositeDisposable?.add(mViewModel.getDateSubject()
+        mCompositeDisposable?.add(viewModel.getDateSubject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{toggleLoadingBar(show = true)})
+            .subscribe(
+                {toggleLoadingBar(show = true)},
+                {onError(it)}
+            ))
 
-        mCompositeDisposable?.add(mViewModel.getCurrentGameSubject()
+        mCompositeDisposable?.add(viewModel.getCurrentGameSubject()
             .filter { g-> g!=AppState.EMPTY_GAME }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{toggleLoadingBar(true)})
+            .subscribe(
+                {toggleLoadingBar(true)},
+                {onError(it)}
+            ))
 
-        mCompositeDisposable?.add(mViewModel.getPlayerStatsSubject()
+        mCompositeDisposable?.add(viewModel.getPlayerStatsSubject()
             .filter { s-> s!=AppState.EMPTY_STATS }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({i->showShotChart()},{it.message}))
+            .subscribe(
+                {showShotChart()},
+                {onError(it)}
+            ))
     }
 
     private fun unbind(){
         mCompositeDisposable?.clear()
     }
 
-    private fun setGames(games:List<Game>){
+    private fun setGames(games:List<GameItem>){
         toggleLoadingBar(false)
         mGameListAdapter?.games = games
     }
@@ -137,20 +160,17 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
                 alpha(0f)
                 start()
             }
-//                ?.withEndAction{
-//                mLoadingBar?.visibility = View.INVISIBLE
-//            }
-
         }
     }
 
-    override fun onClickGame(game:Game){
-        mViewModel?.gameSelected(game)
+    override fun onClickGame(game:GameItem){
+        viewModel.gameSelected(game)
     }
 
     private fun showShotChart(){
         //toggleLoadingBar(false)
-        var intent = Intent(this, ShotChartActivity::class.java)
+        val intent = Intent(this, ShotChartActivity::class.java)
         startActivity(intent)
     }
+
 }

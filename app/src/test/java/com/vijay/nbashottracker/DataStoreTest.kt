@@ -1,6 +1,5 @@
 package com.vijay.nbashottracker
 
-import com.vijay.nbashottracker.datamodel.DataModel
 import com.vijay.nbashottracker.model.APIClient
 import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
 import com.vijay.nbashottracker.model.NBASportRadarAPI
@@ -17,7 +16,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.MockitoAnnotations
-import retrofit2.create
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 

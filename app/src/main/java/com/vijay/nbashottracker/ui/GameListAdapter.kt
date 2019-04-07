@@ -1,6 +1,6 @@
 package com.vijay.nbashottracker.ui
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,13 +8,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.vijay.nbashottracker.R
 import com.vijay.nbashottracker.model.dailyschedule.*
+import com.vijay.nbashottracker.state.objects.GameItem
 import io.reactivex.annotations.NonNull
 
 class GameListAdapter(itemClickListener: GameItemClickListener)
-    :RecyclerView.Adapter<GameListAdapter.GameViewHolder>(){
+    : RecyclerView.Adapter<GameListAdapter.GameViewHolder>(){
 
     var isClickable:Boolean = true;
-    var games: List<Game> = listOf()
+    var games: List<GameItem> = listOf()
         set(value){
             field = value
             notifyDataSetChanged()
@@ -29,7 +30,7 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
     }
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val game: Game = games[position]
+        val game: GameItem = games[position]
         holder.bind(game)
     }
 
@@ -44,7 +45,7 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
         private var mHomeLogo:ImageView? = null
         private var mAwayLogo:ImageView? = null
         private var mGameItemClickListener:GameItemClickListener? = itemClickListener
-        private var mGame:Game?=null
+        private var mGame:GameItem?=null
         private var isClickable:Boolean = isClickable
         init{
             mHomeText = itemView.findViewById(R.id.homeTeam)
@@ -54,11 +55,11 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
             itemView.setOnClickListener(this)
         }
 
-        fun bind(@NonNull game: Game){
-            mHomeText?.text = (game.home as Team).alias
-            mAwayText?.text = (game.away as Team).alias
-            val homeLogoId = itemView.context.resources.getIdentifier((game.home as Team).alias.toLowerCase(),"drawable", itemView.context.packageName)
-            val awayLogoId = itemView.context.resources.getIdentifier((game.away as Team).alias.toLowerCase(),"drawable", itemView.context.packageName)
+        fun bind(@NonNull game: GameItem){
+            mHomeText?.text = game.homeTeam.alias
+            mAwayText?.text = game.awayTeam.alias
+            val homeLogoId = itemView.context.resources.getIdentifier(game.homeTeam.alias.toLowerCase(),"drawable", itemView.context.packageName)
+            val awayLogoId = itemView.context.resources.getIdentifier(game.awayTeam.alias.toLowerCase(),"drawable", itemView.context.packageName)
             mHomeLogo?.setImageResource(homeLogoId)
             mAwayLogo?.setImageResource(awayLogoId)
 
@@ -75,6 +76,6 @@ class GameListAdapter(itemClickListener: GameItemClickListener)
 }
 
 interface GameItemClickListener{
-    fun onClickGame(game:Game)
+    fun onClickGame(game:GameItem)
 }
 

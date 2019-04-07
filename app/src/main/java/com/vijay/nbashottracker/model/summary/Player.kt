@@ -2,7 +2,7 @@ package com.vijay.nbashottracker.model.summary
 
 import com.google.gson.annotations.SerializedName
 
-data class PlayersItem(
+data class Player(
 
 	@field:SerializedName("sr_id")
 	val srId: String? = null,

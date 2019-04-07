@@ -2,18 +2,19 @@ package com.vijay.nbashottracker.state
 
 import android.graphics.Point
 import com.vijay.nbashottracker.model.dailyschedule.Game
+import com.vijay.nbashottracker.state.objects.GameItem
 import com.vijay.nbashottracker.state.objects.PlayerStats
 import io.reactivex.annotations.NonNull
 import io.reactivex.subjects.BehaviorSubject
 import java.time.LocalDate
 
-class AppState private constructor():IAppState{
+class AppState:IAppState{
 
     @NonNull
     override val mSelectedDate:BehaviorSubject<LocalDate> = BehaviorSubject.createDefault(LocalDate.now().minusDays(1))
 
     @NonNull
-    override val mSelectedGame:BehaviorSubject<Game> = BehaviorSubject.create()
+    override val mSelectedGame:BehaviorSubject<GameItem> = BehaviorSubject.create()
 
     @NonNull
     override val mSelectedPlayer:BehaviorSubject<String> = BehaviorSubject.create()
@@ -24,29 +25,9 @@ class AppState private constructor():IAppState{
     @NonNull
     override val mSelectedTeam:BehaviorSubject<TeamType> = BehaviorSubject.createDefault(TeamType.HOME)
 
-    @NonNull
-    override val mPlayerShots:BehaviorSubject<List<ShotState>> = BehaviorSubject.create()
-
     companion object {
-        private var INSTANCE: IAppState? = null
-
-        //Use this to reset the mSelectedGame BehaviorSubject so that the ShotChart activity is not automatically triggered
-        val EMPTY_GAME:Game = Game("",null,null,null)
-
-        val EMPTY_STATS:Map<String,PlayerStats> = mapOf()
-
-        val instance: IAppState
-            get() {
-                if (INSTANCE == null) {
-                    INSTANCE = AppState()
-                }
-                return INSTANCE!!
-            }
+        val EMPTY_GAME:GameItem = GameItem()
+        val EMPTY_STATS = mapOf<String,PlayerStats>()
     }
-}
 
-class ShotState
-constructor(_pos:Point, _make:Boolean){
-    val pos:Point = _pos
-    val make:Boolean = _make
 }

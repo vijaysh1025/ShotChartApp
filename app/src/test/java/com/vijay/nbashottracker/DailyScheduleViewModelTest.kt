@@ -1,6 +1,5 @@
 package com.vijay.nbashottracker
 
-import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.model.dailyschedule.*
 import com.vijay.nbashottracker.model.playbyplay.Player
 import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider

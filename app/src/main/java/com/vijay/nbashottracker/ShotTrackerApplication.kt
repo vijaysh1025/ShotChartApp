@@ -1,9 +1,6 @@
 package com.vijay.nbashottracker
 
 import android.app.Application
-import com.vijay.nbashottracker.datamodel.DataModel
-import io.reactivex.annotations.NonNull
-import com.vijay.nbashottracker.datamodel.IDataModel
 import com.vijay.nbashottracker.core.di.ApplicationComponent
 import com.vijay.nbashottracker.core.di.ApplicationModule
 import com.vijay.nbashottracker.core.di.DaggerApplicationComponent
@@ -23,8 +20,5 @@ class ShotTrackerApplication : Application(){
     }
 
     private fun injectMembers()=appComponent.inject(this)
-
-    @NonNull
-    val mDataModel:IDataModel = DataModel()
 
 }
