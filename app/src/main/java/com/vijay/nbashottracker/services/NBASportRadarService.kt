@@ -1,9 +1,9 @@
 package com.vijay.nbashottracker.services
 
 import com.vijay.nbashottracker.model.NBASportRadarAPI
-import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
-import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
-import com.vijay.nbashottracker.model.summary.GameSummary
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.DailySchedule
+import com.vijay.nbashottracker.feature.games.model.playbyplay.PlayByPlay
+import com.vijay.nbashottracker.feature.games.model.summary.GameSummary
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.create

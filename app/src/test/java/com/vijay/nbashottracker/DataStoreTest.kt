@@ -1,13 +1,15 @@
 package com.vijay.nbashottracker
 
 import com.vijay.nbashottracker.model.APIClient
-import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.DailySchedule
 import com.vijay.nbashottracker.model.NBASportRadarAPI
 import com.vijay.nbashottracker.model.dailyschedule.*
 import com.vijay.nbashottracker.model.playbyplay.*
-import com.vijay.nbashottracker.model.summary.GameSummary
+import com.vijay.nbashottracker.feature.games.model.summary.GameSummary
 import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
-import com.vijay.nbashottracker.state.objects.PlayerStats
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
+import com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem
+import com.vijay.nbashottracker.games.state.objects.PlayerStats
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
 import org.junit.After
@@ -35,7 +37,7 @@ class DataStoreTest{
 
     @Test
     fun getScheduleOfDayTest(){
-        val testObserver = TestObserver<DailySchedule>()
+        val testObserver = TestObserver<com.vijay.nbashottracker.feature.games.model.dailyschedule.DailySchedule>()
         val testScheduler = TestScheduler()
         val date = LocalDate.parse("2015-12-25")
         val datePath = "${date.year} ${date.monthValue} ${date.dayOfMonth}"
@@ -48,13 +50,13 @@ class DataStoreTest{
 
         testScheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS)
 
-        testObserver.assertValue { t->(t.games as List<Game>).get(0).id == "b55c5579-950b-4726-8d36-6467f6caa772" }
+        testObserver.assertValue { t->(t.games as List<com.vijay.nbashottracker.feature.games.model.dailyschedule.Game>).get(0).id == "b55c5579-950b-4726-8d36-6467f6caa772" }
     }
 
 
     @Test
     fun getPlayerList(){
-        val testObserver = TestObserver<GameSummary>()
+        val testObserver = TestObserver<com.vijay.nbashottracker.feature.games.model.summary.GameSummary>()
         val testScheduler = TestScheduler()
         val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
 
@@ -72,7 +74,7 @@ class DataStoreTest{
 
     @Test
     fun testGetFieldGoalEvents_GivenGame(){
-        val testObserver = TestObserver<List<EventsItem?>>()
+        val testObserver = TestObserver<List<com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem?>>()
         val testScheduler = TestScheduler()
         val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
 

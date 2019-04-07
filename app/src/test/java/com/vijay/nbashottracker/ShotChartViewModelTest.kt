@@ -2,9 +2,12 @@ package com.vijay.nbashottracker
 
 import com.vijay.nbashottracker.model.dailyschedule.*
 import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
-import com.vijay.nbashottracker.state.IAppState
-import com.vijay.nbashottracker.state.TeamType
-import com.vijay.nbashottracker.state.objects.PlayerStats
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
+import com.vijay.nbashottracker.feature.games.model.summary.Player
+import com.vijay.nbashottracker.games.state.IAppState
+import com.vijay.nbashottracker.games.state.TeamType
+import com.vijay.nbashottracker.games.state.objects.PlayerStats
+import com.vijay.nbashottracker.games.viewmodels.ShotChartViewModel
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.BehaviorSubject
@@ -20,25 +23,30 @@ class ShotChartViewModelTest{
     @Mock
     private var mDataModel:IDataModel?=null
 
-    private var mShotChartViewModel:ShotChartViewModel?=null
+    private var mShotChartViewModel: ShotChartViewModel?=null
 
     private var mSchedulerProvider:TestSchedulerProvider? = null
 
     @Mock
-    private var mAppState:IAppState?=null
+    private var mAppState: IAppState?=null
 
     @Throws(Exception::class)
     @Before
     fun setUp(){
         MockitoAnnotations.initMocks(this)
         mSchedulerProvider = TestSchedulerProvider()
-        mShotChartViewModel = ShotChartViewModel(mDataModel!!, mSchedulerProvider!!,mAppState!!)
+        mShotChartViewModel = ShotChartViewModel(
+            mDataModel!!,
+            mSchedulerProvider!!,
+            mAppState!!
+        )
     }
 
     @Test
     fun testGetTeamPlayers_emitsPlayerList_whenTeamSelected(){
-        val game = Game("000",null,null,null)
-        val player1 = com.vijay.nbashottracker.model.summary.Player("111","Test Player",null,null,null,"00")
+        val game = com.vijay.nbashottracker.feature.games.model.dailyschedule.Game("000", null, null, null)
+        val player1 =
+            com.vijay.nbashottracker.feature.games.model.summary.Player("111", "Test Player", null, null, null, "00")
         val players = listOf(player1)
 
         Mockito.`when`(mDataModel?.getTeamPlayers(game.id,true)).thenReturn(Single.just(players))
@@ -46,7 +54,7 @@ class ShotChartViewModelTest{
         Mockito.`when`(mAppState?.mSelectedGame).thenReturn(BehaviorSubject.createDefault(game))
 
 
-        var testObserver= TestObserver<List<com.vijay.nbashottracker.model.summary.Player?>>()
+        var testObserver= TestObserver<List<com.vijay.nbashottracker.feature.games.model.summary.Player?>>()
 
         mShotChartViewModel!!.getTeamPlayers()?.subscribeOn(mSchedulerProvider?.computation())?.subscribe(testObserver)
 
@@ -60,10 +68,26 @@ class ShotChartViewModelTest{
     fun testGetPlayerStats_emitsPlayerStats_whenPlayerSelected(){
 
         val player1Id = "000"
-        val player1Stat = PlayerStats(Player("000","Test1 Player","00", player1Id))
+        val player1Stat =
+            PlayerStats(
+                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                    "000",
+                    "Test1 Player",
+                    "00",
+                    player1Id
+                )
+            )
 
         val player2Id = "001"
-        val player2Stat = PlayerStats(Player("001","Test2 Player","01", player2Id))
+        val player2Stat =
+            PlayerStats(
+                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                    "001",
+                    "Test2 Player",
+                    "01",
+                    player2Id
+                )
+            )
 
         val playerStats = mapOf(player1Id to player1Stat, player2Id to player2Stat)
 
@@ -85,10 +109,26 @@ class ShotChartViewModelTest{
     fun testGetPlayerStats_emitsNoValue_whenNotInGameSummary(){
 
         val player1Id = "000"
-        val player1Stat = PlayerStats(Player("000","Test1 Player","00", player1Id))
+        val player1Stat =
+            PlayerStats(
+                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                    "000",
+                    "Test1 Player",
+                    "00",
+                    player1Id
+                )
+            )
 
         val player2Id = "001"
-        val player2Stat = PlayerStats(Player("001","Test2 Player","01", player2Id))
+        val player2Stat =
+            PlayerStats(
+                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                    "001",
+                    "Test2 Player",
+                    "01",
+                    player2Id
+                )
+            )
 
         val playerStats = mapOf(player2Id to player2Stat)
 

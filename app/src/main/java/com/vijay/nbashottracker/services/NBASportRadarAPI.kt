@@ -1,10 +1,10 @@
 package com.vijay.nbashottracker.model
 
 import com.google.gson.Gson
-import com.vijay.nbashottracker.model.dailyschedule.DailySchedule
-import com.vijay.nbashottracker.model.playbyplay.PlayByPlay
-import com.vijay.nbashottracker.model.summary.GameSummary
-import com.vijay.nbashottracker.utilities.*
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.DailySchedule
+import com.vijay.nbashottracker.feature.games.model.playbyplay.PlayByPlay
+import com.vijay.nbashottracker.feature.games.model.summary.GameSummary
+import com.vijay.nbashottracker.configuration.*
 import retrofit2.http.GET
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

@@ -7,9 +7,9 @@
         android:background="@color/colorPrimaryLight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.ShotChartActivity">
+        tools:context=".feature.games.view.ShotChartActivity">
 
-    <com.vijay.nbashottracker.ui.CourtMapView
+    <com.vijay.nbashottracker.feature.games.view.CourtMapView
             android:id="@+id/court_map_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

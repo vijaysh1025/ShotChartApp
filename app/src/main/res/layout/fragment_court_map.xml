@@ -4,9 +4,9 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".ui.CourtMapFragment">
+             tools:context=".feature.games.view.CourtMapFragment">
 
-    <com.vijay.nbashottracker.ui.CourtMapView
+    <com.vijay.nbashottracker.feature.games.view.CourtMapView
             android:id="@+id/court_map_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -1,14 +1,14 @@
 package com.vijay.nbashottracker.services
 
-import com.vijay.nbashottracker.model.dailyschedule.Game
-import com.vijay.nbashottracker.model.playbyplay.EventsItem
-import com.vijay.nbashottracker.model.playbyplay.PeriodsItem
-import com.vijay.nbashottracker.model.summary.GameSummary
-import com.vijay.nbashottracker.model.summary.Player
-import com.vijay.nbashottracker.state.objects.FieldGoalEvent
-import com.vijay.nbashottracker.state.objects.GameItem
-import com.vijay.nbashottracker.state.objects.PlayerItem
-import com.vijay.nbashottracker.state.objects.PlayerStats
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
+import com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem
+import com.vijay.nbashottracker.feature.games.model.playbyplay.PeriodsItem
+import com.vijay.nbashottracker.feature.games.model.summary.GameSummary
+import com.vijay.nbashottracker.feature.games.model.summary.Player
+import com.vijay.nbashottracker.feature.games.state.objects.FieldGoalEvent
+import com.vijay.nbashottracker.feature.games.state.objects.GameItem
+import com.vijay.nbashottracker.feature.games.state.objects.PlayerItem
+import com.vijay.nbashottracker.feature.games.state.objects.PlayerStats
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import java.time.LocalDate

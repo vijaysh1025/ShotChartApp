@@ -6,11 +6,10 @@ import com.vijay.nbashottracker.core.schedulers.ISchedulerProvider
 import com.vijay.nbashottracker.core.schedulers.SchedulerProvider
 import com.vijay.nbashottracker.services.NBAStatsRepository
 import com.vijay.nbashottracker.services.Network
-import com.vijay.nbashottracker.state.AppState
-import com.vijay.nbashottracker.state.IAppState
-import com.vijay.nbashottracker.usecases.*
-import com.vijay.nbashottracker.utilities.API_KEY
-import com.vijay.nbashottracker.utilities.GlobalState
+import com.vijay.nbashottracker.feature.games.state.AppState
+import com.vijay.nbashottracker.feature.games.state.IAppState
+import com.vijay.nbashottracker.configuration.API_KEY
+import com.vijay.nbashottracker.configuration.GlobalState
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -30,7 +29,7 @@ class ApplicationModule(private val application:ShotTrackerApplication){
 
     @Provides @Singleton fun provideSchedulerProvider():ISchedulerProvider = SchedulerProvider()
 
-    @Provides @Singleton fun provideAppState():IAppState = AppState()
+    @Provides @Singleton fun provideAppState(): IAppState = AppState()
 
     @Provides @Singleton fun provideRetrofit():Retrofit{
         return Retrofit.Builder()

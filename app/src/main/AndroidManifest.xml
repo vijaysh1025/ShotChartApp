@@ -14,10 +14,10 @@
             android:theme="@style/AppTheme"
             android:hardwareAccelerated="true"
         >
-        <activity android:name=".ui.ShotChartActivity"
+        <activity android:name="com.vijay.nbashottracker.feature.games.view.ShotChartActivity"
         android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.DailyScheduleActivity"
+        <activity android:name="com.vijay.nbashottracker.feature.games.view.DailyScheduleActivity"
                   android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
