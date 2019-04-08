@@ -13,10 +13,16 @@ import javax.inject.Inject
 class SchedulerProvider
 @Inject constructor() : ISchedulerProvider {
 
+    /**
+     * Used for all non-UI related work
+     */
     override fun computation(): Scheduler {
         return Schedulers.computation()
     }
 
+    /**
+     * UI Thread for displaying final result to the UI.
+     */
     override fun ui(): Scheduler {
         return AndroidSchedulers.mainThread()
     }

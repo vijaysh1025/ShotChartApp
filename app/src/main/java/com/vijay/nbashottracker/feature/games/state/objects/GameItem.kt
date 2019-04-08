@@ -2,6 +2,9 @@ package com.vijay.nbashottracker.feature.games.state.objects
 
 import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
 
+/**
+ * Data Model for Game used by GetGames Use Case.
+ */
 class GameItem
 constructor(game: com.vijay.nbashottracker.feature.games.model.dailyschedule.Game?=null){
     val id:String = game?.id?:""

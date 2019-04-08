@@ -24,13 +24,22 @@ import io.reactivex.schedulers.Schedulers
 import java.time.LocalDate
 import javax.inject.Inject
 
+/**
+ * View for displaying a list of games for a given date.
+ */
 class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
 
+    /**
+     * View model for updating UI and communicating state change information
+     */
     @Inject lateinit var viewModel: DailyScheduleViewModel
 
+    /**
+     * Primary View items in activity
+     */
     @JvmField
     @BindView(R.id.datePicker)
     var mDatePicker:DatePicker?=null
@@ -48,6 +57,9 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
 
     private lateinit var unbinder:Unbinder
 
+    /**
+     * Dagger initialization, Butterknife binding, and view setup
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_daily_schedule)
@@ -56,21 +68,35 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
         setupViews()
     }
 
+    /**
+     * RxJava observable and state Binding call
+     */
     override fun onResume() {
         super.onResume()
         bind()
     }
 
+    /**
+     * RxJava observable and state unBinding call
+     */
     override fun onPause() {
         super.onPause()
         unbind()
     }
 
+    /**
+     * Butterknife view unbinding
+     */
     override fun onDestroy() {
         super.onDestroy()
         unbinder.unbind()
     }
 
+    /**
+     * View specific initializations
+     * Datepicker -> Max date should be one less than today to only display games that have shot charts
+     * Game List Adapter initialization
+     */
     private fun setupViews(){
         mGameListAdapter = GameListAdapter(this)
 
@@ -81,10 +107,14 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
         mGameListView?.layoutManager = LinearLayoutManager(this)
     }
 
+    /**
+     * RxJava bindings
+     */
     private fun bind(){
 
         mCompositeDisposable = CompositeDisposable()
 
+        // Set player stats state when game is clicked
         mCompositeDisposable?.add(viewModel.getPlayerStats()
             .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.computation())
@@ -93,6 +123,7 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
                 {onError(it)}
             ))
 
+        // Set games for a given date
         mCompositeDisposable?.add(viewModel.getGames()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
@@ -101,6 +132,7 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
                 {onError(it)}
             ))
 
+        // Start loading bar when date changes.
         mCompositeDisposable?.add(viewModel.getDateSubject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
@@ -109,6 +141,7 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
                 {onError(it)}
             ))
 
+        // Start loading bar when game is selected
         mCompositeDisposable?.add(viewModel.getCurrentGameSubject()
             .filter { g-> g!= com.vijay.nbashottracker.feature.games.state.AppState.EMPTY_GAME }
             .subscribeOn(Schedulers.computation())
@@ -118,6 +151,7 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
                 {onError(it)}
             ))
 
+        // when player stats are emitted, show shot chart activity
         mCompositeDisposable?.add(viewModel.getPlayerStatsSubject()
             .filter { s-> s!= com.vijay.nbashottracker.feature.games.state.AppState.EMPTY_STATS }
             .subscribeOn(Schedulers.computation())
@@ -128,15 +162,18 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
             ))
     }
 
+    // Unbind all Rx Objects
     private fun unbind(){
         mCompositeDisposable?.clear()
     }
 
+    // When games returned from network request, load games to Recycler view and hide loading bar
     private fun setGames(games:List<GameItem>){
         toggleLoadingBar(false)
         mGameListAdapter?.games = games
     }
 
+    // Handle loading bar show/hide states
     private fun toggleLoadingBar(show:Boolean){
 
         mLoadingBar?.animation?.cancel()
@@ -161,10 +198,12 @@ class DailyScheduleActivity : BaseActivity(), GameItemClickListener {
         }
     }
 
+    // when game is clicked update appropriate state in ViewModel->AppState
     override fun onClickGame(game: GameItem){
         viewModel.gameSelected(game)
     }
 
+    // Load shot chart activity
     private fun showShotChart(){
         //toggleLoadingBar(false)
         val intent = Intent(this, ShotChartActivity::class.java)

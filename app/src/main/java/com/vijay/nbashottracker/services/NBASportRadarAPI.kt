@@ -16,8 +16,10 @@ import okhttp3.Response
 import retrofit2.http.Path
 import java.io.IOException
 
-
+// Retrofit interface to communicate to SportRadar API for NBA data
 interface NBASportRadarAPI{
+
+    // Hit schedule of day enpoint
     @GET("/nba/trial/v5/en/games/{year}/{month}/{day}/schedule.json")
     fun getScheduleOfDay(
         @Path("year") year:String,
@@ -25,11 +27,13 @@ interface NBASportRadarAPI{
         @Path("day") day:String
     ): Single<DailySchedule>
 
+    // Hit play-by-play endpoint
     @GET("/nba/trial/v5/en/games/{gameId}/pbp.json")
     fun getPlayByPlay(
       @Path("gameId") gameId:String
     ):Single<PlayByPlay>
 
+    // Hit game summary endpoint
     @GET("/nba/trial/v5/en/games/{gameId}/summary.json")
     fun getGameSummary(
         @Path("gameId") gameId:String

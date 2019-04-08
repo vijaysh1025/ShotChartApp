@@ -4,6 +4,9 @@ import com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem
 import com.vijay.nbashottracker.feature.games.model.playbyplay.Location
 import com.vijay.nbashottracker.feature.games.model.playbyplay.Player
 
+/**
+ * Data model for PlayerStats used by GetPlayerStats Use Case
+ */
 class PlayerStats
 constructor(_player: com.vijay.nbashottracker.feature.games.model.playbyplay.Player){
     val playerNumber:String?=_player.jerseyNumber
@@ -11,6 +14,10 @@ constructor(_player: com.vijay.nbashottracker.feature.games.model.playbyplay.Pla
     val fieldGoalEvents:MutableList<FieldGoalEvent> = mutableListOf()
 }
 
+/**
+ * Field Goal Events that take shot location data from API and normalize it for easy consumption
+ * for the UI Shot Chart Map
+ */
 class FieldGoalEvent
 constructor(_event: com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem) {
 

@@ -6,7 +6,8 @@ import android.widget.ImageView
 import com.vijay.nbashottracker.R
 
 /**
- * TODO: document your custom view class.
+ * Shot spot representation of X and O.
+ * ShapeShifter was used to morph animated X to O and O to X.
  */
 class ShotSpotView : ImageView {
 

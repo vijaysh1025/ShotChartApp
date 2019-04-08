@@ -21,16 +21,36 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import javax.inject.Singleton
 
+/**
+ * Application Module tied to ShotTrackerApplication
+ */
 @Module
 class ApplicationModule(private val application:ShotTrackerApplication){
+    /**
+     * Provide application context to di participants defined in component
+     */
     @Provides @Singleton fun provideApplicationContext():Context = application
 
+    /**
+     * Provide implementatino of NBAStatsRepository to di participants defined in component
+     */
     @Provides @Singleton fun provideNBAStatsRepository(nbaStatsRepository:Network):NBAStatsRepository = nbaStatsRepository
 
+    /**
+     * Provide SchedulerProvider to di participants defined in component. This provider is used instead of directly
+     * accessing RxJava / Android Schedulers to make Unit Testing easier.
+     */
     @Provides @Singleton fun provideSchedulerProvider():ISchedulerProvider = SchedulerProvider()
 
+    /**
+     * Provide AppState to di participants in component. This holds application state in the
+     * for of Behavior subjects.
+     */
     @Provides @Singleton fun provideAppState(): IAppState = AppState()
 
+    /**
+     * Provide Retrofit to di participants in component.
+     */
     @Provides @Singleton fun provideRetrofit():Retrofit{
         return Retrofit.Builder()
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -40,6 +60,9 @@ class ApplicationModule(private val application:ShotTrackerApplication){
             .build()
     }
 
+    /**
+     * This method is used to append the api key to the request endpoint for Retrofit.
+     */
     private fun getHttpClient():OkHttpClient{
         val httpClient = OkHttpClient.Builder().addInterceptor(object : Interceptor {
             @Throws(IOException::class)

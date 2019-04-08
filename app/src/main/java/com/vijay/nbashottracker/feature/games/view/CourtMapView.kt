@@ -8,12 +8,13 @@ import android.view.View
 import com.vijay.nbashottracker.R
 
 /**
- * TODO: document your custom view class.
+ * Court Map View that animates the basketball court in ShotChartActivity
  */
 class CourtMapView : View {
 
     /**
-     * In the example view, this drawable is drawn above the text.
+     * Animated Vector for Basketball court
+     * Used ShapeShifter online tool to create vector
      */
     var courtVectorDrawable: AnimatedVectorDrawable? = null
 

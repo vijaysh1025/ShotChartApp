@@ -8,6 +8,9 @@ import io.reactivex.Single
 
 import javax.inject.Inject
 
+/**
+ * Use Case for getting team players to be displayed when Home/Away team is picked.
+ */
 class GetTeamPlayers
 @Inject constructor(private val nbaStatsRepository: NBAStatsRepository):
     UseCase<List<PlayerItem>, GetTeamPlayers.Params>(){

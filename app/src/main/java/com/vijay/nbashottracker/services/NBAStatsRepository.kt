@@ -20,9 +20,13 @@ interface NBAStatsRepository{
     fun getPlayerStats(gameId:String):Single<Map<String,PlayerStats>>
 }
 
+/**
+ * Repository for converting raw api request data to use case relevant data
+ */
 class Network
 @Inject constructor(private val service:NBASportRadarService):NBAStatsRepository{
 
+    // Retrieve raw game data and convert to use case game item data
     override fun getGames(localDate:LocalDate): Single<List<GameItem>> {
         return service
             .getScheduleOfDay(localDate.year.toString(), localDate.monthValue.toString(), localDate.dayOfMonth.toString())
@@ -30,7 +34,7 @@ class Network
             .map{it.games.map { game:Game -> GameItem(game) }}
     }
 
-
+    // Retrieve raw game summary data and convert to use case team players data
     override fun getTeamPlayers(gameId:String, isHomeTeam:Boolean):Single<List<PlayerItem>>{
         return service
             .getGameSummary(gameId)
@@ -42,6 +46,8 @@ class Network
                     it.away?.players?.map{player:Player-> PlayerItem(player)}}
     }
 
+
+    // Retrieve raw play by play data and convert to use case player stats data
     override fun getPlayerStats(gameId: String):Single<Map<String,PlayerStats>>{
         return getFieldFoalEvents(gameId)
             .flatMap {
@@ -49,6 +55,7 @@ class Network
             }
     }
 
+    // Get game events list for all periods in a game
     private fun getGameEvents(gameId:String):Single<List<EventsItem?>?>{
         return service
             .getPlayByPlay(gameId)
@@ -56,16 +63,19 @@ class Network
             .map { t->combineEvents(t.periods) }
     }
 
+    // Get only Field goal events from list of all events
     private fun getFieldFoalEvents(gameId:String):Single<List<EventsItem?>?>{
         return getGameEvents(gameId)
             .flatMap { it-> Single.just(it.filter { i->i?.eventType!!.contains("point") } )}
     }
 
+    // combine events from all periods
     private fun combineEvents(periods:List<PeriodsItem?>?):List<EventsItem?>?{
         val events = periods?.map{ it->it?.events}?.flatMap { it!!.asIterable() }
         return events
     }
 
+    // map raw data to player stats data with player ids as key.
     private fun getPlayerStatsMap(eventList:List<EventsItem?>):MutableMap<String,PlayerStats>{
         val playerStats:MutableMap<String,PlayerStats> = mutableMapOf()
         for(e in eventList){

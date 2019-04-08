@@ -17,6 +17,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+/**
+ * View Model to bind state data from AppState to View(DailyScheduleActivity)
+ */
 class DailyScheduleViewModel
 @Inject constructor(private val getGames: GetGames, private val getPlayerStats: GetPlayerStats, private val schedulerProvider:ISchedulerProvider, private val appState: IAppState){
 
@@ -26,6 +29,8 @@ class DailyScheduleViewModel
         return Date().time- DateUtils.DAY_IN_MILLIS
     }
 
+    // Get Games for day when date state is updated. Debounce quick date changes to prevent
+    // multiple API requests in a short time frame.
     fun getGames():Observable<List<GameItem>> {
         return appState
             .mSelectedDate
@@ -34,6 +39,8 @@ class DailyScheduleViewModel
             .flatMap { date -> getGames.For(GetGames.Params(date)).toObservable() }
     }
 
+    // Get Player Stats based on a selected game
+    // Filter EMPTY GAME -> when returning from ShotChartActivity to DailyScheduleActivity
     fun getPlayerStats():Observable<Map<String, PlayerStats>>{
         return appState
             .mSelectedGame
@@ -42,26 +49,32 @@ class DailyScheduleViewModel
             .flatMap{game->getPlayerStats.For(GetPlayerStats.Params(game.id)).toObservable()}
     }
 
+    //  Get Data state subject
     fun getDateSubject():BehaviorSubject<LocalDate>{
         return  appState.mSelectedDate
     }
 
+    // Update date state
     fun dateSelected(@NonNull date:LocalDate) {
         appState.mSelectedDate.onNext(date)
     }
 
+    // Get current game subject
     fun getCurrentGameSubject():BehaviorSubject<GameItem>{
         return appState.mSelectedGame
     }
 
+    // Get Player Stats subject
     fun getPlayerStatsSubject():Subject<Map<String, PlayerStats>>{
         return appState.mSelectedGamePlayerStats
     }
 
+    // Update Game selected
     fun gameSelected(@NonNull game: GameItem){
         appState.mSelectedGame.onNext(game)
     }
 
+    // Update Player Stats
     fun setPlayerStats(@NonNull playerStats:Map<String, PlayerStats>){
         appState.mSelectedGamePlayerStats.onNext(playerStats)
     }

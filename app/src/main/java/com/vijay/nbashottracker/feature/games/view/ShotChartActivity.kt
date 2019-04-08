@@ -24,14 +24,23 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 
+/**
+ * View for displaying shot chart information for a given player in a given game
+ */
 class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
 
     @NonNull
     private var mCompositeDisposable: CompositeDisposable? = null
 
+    /**
+     * View model for updating UI and communicating state change information
+     */
     @Inject
     lateinit var mViewModel: ShotChartViewModel
 
+    /**
+     * Primary View items in activity
+     */
     @JvmField
     @BindView(R.id.home_team_toggle)
     var mHomeTeamToggle: CardView?=null
@@ -70,6 +79,9 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
     @NonNull
     private var mPlayerIds:MutableList<String?> = mutableListOf()
 
+    /**
+     * Dagger initialization, Butterknife binding, and view setup
+     */
     private lateinit var unbinder: Unbinder
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,22 +91,37 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         setupViews()
     }
 
+    /**
+     * RxJava observable and state Binding call
+     * Also animated the court vector drawable
+     */
     override fun onResume() {
         super.onResume()
         mCourtMapView?.courtVectorDrawable?.start()
         bind()
     }
 
+    /**
+     * RxJava observable and state unBinding call
+     */
     override fun onPause() {
         super.onPause()
         unbind()
     }
 
+    /**
+     * Butterknife view unbinding
+     */
     override fun onDestroy() {
         super.onDestroy()
         unbinder.unbind()
     }
 
+    /**
+     * View specific initializations
+     * PlayerPicker & Team Toggle listener initialization
+     * Initialize a list of shotSpot views (Xs and Os) for missed and made shots
+     */
     private fun setupViews(){
         mPlayerPicker?.setOnValueChangedListener(this)
 
@@ -124,35 +151,45 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         }
     }
 
+    /**
+     * RxJava bindings
+     */
     private fun bind(){
 
         mCompositeDisposable = CompositeDisposable()
+
+        //Set Team logos based on selected game
         mCompositeDisposable?.add(mViewModel.getCurrentGameSubject()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::setTeamNames))
 
+        // Set Players based on Selected team (Defaults to Home team on start)
         mCompositeDisposable?.add(mViewModel.getTeamPlayers()!!
             .doOnError { t:Throwable -> Log.d("ShotChartActivity", t.cause.toString()) }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({setPlayers(it)},{ setPlayers(null)}))
 
+        // Update chart when a new player is selected in NumberPicker
         mCompositeDisposable?.add(mViewModel.getPlayerStats()!!
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::loadShotChart))
 
+        // Load Team data when Home/Away Team is selected
         mCompositeDisposable?.add(mViewModel.getTeamSelected()
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::loadTeamData))
     }
 
+    // Unbind all Rx Objects
     private fun unbind(){
         mCompositeDisposable?.clear()
     }
 
+    // Set team logos based on game being viewed.
     private fun setTeamNames(game: GameItem){
         val homeLogoId = resources.getIdentifier(game.homeTeam.alias.toLowerCase(),"drawable", this.applicationContext.packageName)
         val awayLogoId = resources.getIdentifier(game.awayTeam.alias.toLowerCase(),"drawable", this.applicationContext.packageName)
@@ -161,6 +198,7 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         mAwayTeamLogo?.setImageResource(awayLogoId)
     }
 
+    // Set Players in Number Picker
     private fun setPlayers(players:List<PlayerItem?>?){
         if(players!=null) {
             val playerIds= players.map { it?.number.toString() }.toTypedArray()
@@ -177,6 +215,8 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
 
     }
 
+    // Reset game and stats stated when the back button is pressed to prevent auto loading of
+    // this activity since subject behaviors are triggered on subscribe.
     override fun onBackPressed() {
         super.onBackPressed()
         mViewModel.gameCleared()
@@ -185,6 +225,7 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         startActivity(intent)
     }
 
+    // Update player state when player is updated in Number Picker
     override fun onValueChange(p0: NumberPicker?, p1: Int, p2: Int) {
         mViewModel.playerSelected(mPlayerIds[p0!!.value]!!)
     }
@@ -193,6 +234,7 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         super.finish()
     }
 
+    // Load shot chart data. Xs and Os are updated.
     private fun loadShotChart(playerStats: PlayerStats){
         val group:ViewGroup = findViewById(R.id.shot_chart_main)
         val width = group.measuredWidth-group.paddingLeft-group.paddingRight
@@ -214,6 +256,7 @@ class ShotChartActivity : BaseActivity(),  NumberPicker.OnValueChangeListener{
         }
     }
 
+    // Update team toggles based on which one is clicked.
     private fun loadTeamData(teamType: TeamType){
         val homeScale = if(teamType== TeamType.HOME) 1.05f else 0.95f
         val awayScale = if(teamType== TeamType.AWAY) 1.05f else 0.95f

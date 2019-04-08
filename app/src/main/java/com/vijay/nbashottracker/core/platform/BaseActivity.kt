@@ -11,11 +11,22 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
+/**
+ * BaseActivity that all Activities should derive from
+ */
 abstract class BaseActivity : AppCompatActivity(){
+
+    /**
+     * Access to DI ApplicationComponent so that each activity can inject itself.
+     */
     val appComponent: ApplicationComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as ShotTrackerApplication).appComponent
     }
 
+    /**
+     * General Error handling function for all Observable subscribers that will
+     * display a message in a snackbar depending on the error.
+     */
     fun onError(t:Throwable){
         when(t){
             is HttpException -> onUnkownError(t.message?:"Http Error")
@@ -25,10 +36,16 @@ abstract class BaseActivity : AppCompatActivity(){
         }
     }
 
+    /**
+     * Error Type responses for different Exceptions.
+     */
     fun onUnkownError(error:String) = showErrorMessage(error)
     fun onTimeOut()= showErrorMessage("Time Out Error")
     fun onNetworkError() = showErrorMessage("Network Error")
 
+    /**
+     * SnackBar create and show.
+     */
     fun showErrorMessage(message:String){
         val view:View = findViewById(android.R.id.content)
         val snackbar = Snackbar.make(view,message,

@@ -5,8 +5,12 @@ import com.vijay.nbashottracker.core.di.ApplicationComponent
 import com.vijay.nbashottracker.core.di.ApplicationModule
 import com.vijay.nbashottracker.core.di.DaggerApplicationComponent
 
+/**
+ * Main Application
+ */
 class ShotTrackerApplication : Application(){
 
+    // Dagger Component initialization
     val appComponent:ApplicationComponent by lazy(mode=LazyThreadSafetyMode.NONE){
         DaggerApplicationComponent
             .builder()
@@ -14,6 +18,7 @@ class ShotTrackerApplication : Application(){
             .build()
     }
 
+    // Inject this application into Dagger Application component.
     override fun onCreate() {
         super.onCreate()
         this.injectMembers()

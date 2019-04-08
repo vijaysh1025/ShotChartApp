@@ -7,6 +7,9 @@ import io.reactivex.Single
 import java.time.LocalDate
 import javax.inject.Inject
 
+/**
+ * Use Case for getting games to be displayed in list on DailyScheduleActivity
+ */
 class GetGames
 @Inject constructor(private val nbaStatsRepository: NBAStatsRepository):
     UseCase<List<GameItem>, GetGames.Params>(){
