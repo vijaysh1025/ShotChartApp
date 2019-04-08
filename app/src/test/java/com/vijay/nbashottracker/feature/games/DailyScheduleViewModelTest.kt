@@ -1,7 +1,6 @@
-package com.vijay.nbashottracker
+package com.vijay.nbashottracker.feature.games
 
 import com.vijay.nbashottracker.core.schedulers.ISchedulerProvider
-import com.vijay.nbashottracker.feature.games.model.dailyschedule.*
 import com.vijay.nbashottracker.feature.games.model.playbyplay.Player
 import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
 import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game

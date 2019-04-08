@@ -14,6 +14,9 @@ class TestSchedulerProvider : ISchedulerProvider {
         return Schedulers.trampoline()
     }
 
+    override fun io(): Scheduler {
+        return Schedulers.trampoline()
+    }
     override fun ui(): Scheduler {
         return Schedulers.trampoline()
     }

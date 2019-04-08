@@ -20,6 +20,10 @@ class SchedulerProvider
         return Schedulers.computation()
     }
 
+
+    override fun io():Scheduler{
+        return Schedulers.io()
+    }
     /**
      * UI Thread for displaying final result to the UI.
      */

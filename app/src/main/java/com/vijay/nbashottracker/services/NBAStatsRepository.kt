@@ -1,5 +1,7 @@
 package com.vijay.nbashottracker.services
 
+import com.vijay.nbashottracker.core.schedulers.ISchedulerProvider
+import com.vijay.nbashottracker.core.schedulers.SchedulerProvider
 import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
 import com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem
 import com.vijay.nbashottracker.feature.games.model.playbyplay.PeriodsItem
@@ -24,13 +26,13 @@ interface NBAStatsRepository{
  * Repository for converting raw api request data to use case relevant data
  */
 class Network
-@Inject constructor(private val service:NBASportRadarService):NBAStatsRepository{
+@Inject constructor(private val service:NBASportRadarService, private val schedulerProvider: ISchedulerProvider):NBAStatsRepository{
 
     // Retrieve raw game data and convert to use case game item data
     override fun getGames(localDate:LocalDate): Single<List<GameItem>> {
         return service
             .getScheduleOfDay(localDate.year.toString(), localDate.monthValue.toString(), localDate.dayOfMonth.toString())
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(schedulerProvider.io())
             .map{it.games.map { game:Game -> GameItem(game) }}
     }
 
@@ -38,7 +40,7 @@ class Network
     override fun getTeamPlayers(gameId:String, isHomeTeam:Boolean):Single<List<PlayerItem>>{
         return service
             .getGameSummary(gameId)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(schedulerProvider.io())
             .map{
                 if(isHomeTeam)
                     it.home?.players?.map { player:Player-> PlayerItem(player) }
@@ -59,7 +61,7 @@ class Network
     private fun getGameEvents(gameId:String):Single<List<EventsItem?>?>{
         return service
             .getPlayByPlay(gameId)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(schedulerProvider.io())
             .map { t->combineEvents(t.periods) }
     }
 

@@ -39,7 +39,7 @@ class NBASportRadarServiceTest{
     fun setUp(){
         MockitoAnnotations.initMocks(this)
         mSchedulerProvider = TestSchedulerProvider()
-        mNetworkRepository = Network(mNBASportRadarService)
+        mNetworkRepository = Network(mNBASportRadarService,mSchedulerProvider)
     }
 
 /*    @Test

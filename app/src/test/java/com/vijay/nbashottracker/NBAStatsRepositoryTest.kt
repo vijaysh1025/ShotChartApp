@@ -8,11 +8,14 @@ import com.vijay.nbashottracker.feature.games.model.playbyplay.*
 import com.vijay.nbashottracker.feature.games.model.summary.GameSummary
 import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
 import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.Team
 import com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem
+import com.vijay.nbashottracker.feature.games.state.objects.GameItem
 import com.vijay.nbashottracker.feature.games.state.objects.PlayerStats
 import com.vijay.nbashottracker.services.NBASportRadarService
 import com.vijay.nbashottracker.services.NBAStatsRepository
 import com.vijay.nbashottracker.services.Network
+import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
 import org.junit.After
@@ -21,6 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
@@ -39,85 +43,42 @@ class NBAStatsRepositoryTest{
     fun setUp(){
         MockitoAnnotations.initMocks(this)
         mSchedulerProvider = TestSchedulerProvider()
-        mNetworkRepository = Network(mNBASportRadarService)
+        mNetworkRepository = Network(mNBASportRadarService, mSchedulerProvider)
     }
-/*
+
     @Test
-    fun getScheduleOfDayTest(){
-        val testObserver = TestObserver<com.vijay.nbashottracker.feature.games.model.dailyschedule.DailySchedule>()
+    fun testGetGames_returnsGameItems_whenDateSet(){
+        val testObserver = TestObserver<List<GameItem>>()
         val testScheduler = TestScheduler()
         val date = LocalDate.parse("2015-12-25")
-        val datePath = "${date.year} ${date.monthValue} ${date.dayOfMonth}"
-        System.out.println(datePath)
-        var disposable = APIClient.instance
-            ?.create<NBASportRadarAPI>()
-            ?.getScheduleOfDay(date.year.toString(), date.monthValue.toString(), date.dayOfMonth.toString())
-            ?.subscribeOn(testScheduler)
-            ?.subscribe(testObserver)
 
-        testScheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS)
+        val game1:Game = Game(
+            "1",
+            Venue("1", "TestArena"),
+            Team("0", "home", "H"),
+            Team("1", "Away", "A")
+        )
+        val game2:Game = Game(
+            "2",
+            Venue("2", "TestArena"),
+            Team("2", "home1", "H1"),
+            Team("3", "Away2", "A2")
+        )
 
-        testObserver.assertValue { t->(t.games as List<com.vijay.nbashottracker.feature.games.model.dailyschedule.Game>).get(0).id == "b55c5579-950b-4726-8d36-6467f6caa772" }
-    }
+        val games:List<Game> = listOf(game1,game2)
 
+        val gameItems:List<GameItem> = listOf(GameItem(game1), GameItem(game2))
 
-    @Test
-    fun getPlayerList(){
-        val testObserver = TestObserver<com.vijay.nbashottracker.feature.games.model.summary.GameSummary>()
-        val testScheduler = TestScheduler()
-        val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
+        val dailySchedule:DailySchedule = DailySchedule(games)
 
-        var disposable = APIClient.instance
-            ?.create<NBASportRadarAPI>()
-            ?.getGameSummary(gameId)
-            ?.subscribeOn(testScheduler)
-            ?.subscribe(testObserver)
+        Mockito.`when`(mNBASportRadarService.getScheduleOfDay(date.year.toString(),date.monthValue.toString(),date.dayOfMonth.toString())).thenReturn(Single.just(dailySchedule))
 
-        testScheduler.advanceTimeBy(1000, TimeUnit.MILLISECONDS)
-
-        testObserver.assertValue { t->t.attendance == 19129}
-
-    }
-
-    @Test
-    fun testGetFieldGoalEvents_GivenGame(){
-        val testObserver = TestObserver<List<com.vijay.nbashottracker.feature.games.model.playbyplay.EventsItem?>>()
-        val testScheduler = TestScheduler()
-        val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
-
-        val disposable = mDataModel
-            ?.getFieldFoalEvents(gameId)
-            ?.subscribeOn(mSchedulerProvider?.computation())
-            ?.subscribe(testObserver)
+        mNetworkRepository.getGames(date)
+            .subscribe(testObserver)
 
         testObserver.assertNoErrors()
-
-        testObserver.awaitDone(10,TimeUnit.SECONDS).assertValue{
-           it.all { t->t?.eventType!!.contains("point") }
+        testObserver.awaitDone(5, TimeUnit.SECONDS).assertValue {
+            it[0].id == game1.id && it[1].id==game2.id
         }
     }
-
-    @Test
-    fun testGetPlayerStatsMap_GivenGame(){
-        val testObserver = TestObserver<Map<String, PlayerStats>>()
-        val testScheduler = TestScheduler()
-        val gameId = "013dd2a7-fec4-4cc5-b819-f3cf16a1f820"
-
-        val disposable = mDataModel
-            ?.getPlayerStats(gameId)
-            ?.subscribeOn(mSchedulerProvider?.computation())
-            ?.subscribe(testObserver)
-
-        testObserver.assertNoErrors()
-
-        testObserver.awaitDone(5,TimeUnit.SECONDS).assertValue{
-            it.isNotEmpty()
-        }
-    }
-
-    @After
-    fun tearDown(){
-        mDataModel = null
-        mSchedulerProvider = null
-    }*/
 }
