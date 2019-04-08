@@ -7,7 +7,10 @@
 ## Overview
 Pick an NBA game from any date and display the shot chart data of any given player from that game. Mobile app technologies have seen a new shift in how developers think and how they develop. This application utilizes the latest mobile technologies to provide the best user experience.
 
-* Architecture - MVVM
+* Architecture - Clean Architecture (Data / Domain / Presentation)
+* Data Layer - Network Repository (using Retrofit). Eventually would like to implement caching using Room.
+* Domain Layer - Use Cases
+* Presentation Layer - MVVM
 * Key Technologies - Retrofit, RxJava, JUnit, Mockito
 
 ## Application Breakdown
