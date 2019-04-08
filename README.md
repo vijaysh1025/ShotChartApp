@@ -11,7 +11,7 @@ Pick an NBA game from any date and display the shot chart data of any given play
 * Data Layer - Network Repository (using Retrofit). Eventually would like to implement caching using Room.
 * Domain Layer - Use Cases
 * Presentation Layer - MVVM
-* Key Technologies - Retrofit, RxJava, JUnit, Mockito
+* Key Technologies - Retrofit, RxJava, Dagger, JUnit, Mockito
 
 ## Application Breakdown
 ### Game Selection Screen
