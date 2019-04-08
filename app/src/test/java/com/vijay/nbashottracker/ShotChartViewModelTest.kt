@@ -1,13 +1,16 @@
 package com.vijay.nbashottracker
 
-import com.vijay.nbashottracker.model.dailyschedule.*
+import com.vijay.nbashottracker.feature.games.model.dailyschedule.*
 import com.vijay.nbashottracker.core.schedulers.TestSchedulerProvider
 import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
-import com.vijay.nbashottracker.feature.games.model.summary.Player
-import com.vijay.nbashottracker.games.state.IAppState
-import com.vijay.nbashottracker.games.state.TeamType
-import com.vijay.nbashottracker.games.state.objects.PlayerStats
-import com.vijay.nbashottracker.games.viewmodels.ShotChartViewModel
+import com.vijay.nbashottracker.feature.games.model.playbyplay.Player
+import com.vijay.nbashottracker.feature.games.state.IAppState
+import com.vijay.nbashottracker.feature.games.state.TeamType
+import com.vijay.nbashottracker.feature.games.state.objects.GameItem
+import com.vijay.nbashottracker.feature.games.state.objects.PlayerItem
+import com.vijay.nbashottracker.feature.games.state.objects.PlayerStats
+import com.vijay.nbashottracker.feature.games.usecases.GetTeamPlayers
+import com.vijay.nbashottracker.feature.games.viewmodels.ShotChartViewModel
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.BehaviorSubject
@@ -21,14 +24,14 @@ import java.util.concurrent.TimeUnit
 
 class ShotChartViewModelTest{
     @Mock
-    private var mDataModel:IDataModel?=null
+    private lateinit var mGetTeamPlayers: GetTeamPlayers
 
-    private var mShotChartViewModel: ShotChartViewModel?=null
+    private lateinit var mShotChartViewModel: ShotChartViewModel
 
-    private var mSchedulerProvider:TestSchedulerProvider? = null
+    private lateinit var mSchedulerProvider:TestSchedulerProvider
 
     @Mock
-    private var mAppState: IAppState?=null
+    private lateinit var mAppState: IAppState
 
     @Throws(Exception::class)
     @Before
@@ -36,27 +39,26 @@ class ShotChartViewModelTest{
         MockitoAnnotations.initMocks(this)
         mSchedulerProvider = TestSchedulerProvider()
         mShotChartViewModel = ShotChartViewModel(
-            mDataModel!!,
-            mSchedulerProvider!!,
-            mAppState!!
+            mGetTeamPlayers,
+            mSchedulerProvider,
+            mAppState
         )
     }
 
     @Test
     fun testGetTeamPlayers_emitsPlayerList_whenTeamSelected(){
-        val game = com.vijay.nbashottracker.feature.games.model.dailyschedule.Game("000", null, null, null)
-        val player1 =
-            com.vijay.nbashottracker.feature.games.model.summary.Player("111", "Test Player", null, null, null, "00")
+        val game = GameItem(Game("000", null, null, null))
+        val player1 = PlayerItem(com.vijay.nbashottracker.feature.games.model.summary.Player("111", "Test Player",true,"",true,"00","001"))
         val players = listOf(player1)
 
-        Mockito.`when`(mDataModel?.getTeamPlayers(game.id,true)).thenReturn(Single.just(players))
-        Mockito.`when`(mAppState?.mSelectedTeam).thenReturn(BehaviorSubject.createDefault(TeamType.HOME))
-        Mockito.`when`(mAppState?.mSelectedGame).thenReturn(BehaviorSubject.createDefault(game))
+        Mockito.`when`(mGetTeamPlayers.For(GetTeamPlayers.Params(game.id,true))).thenReturn(Single.just(players))
+        Mockito.`when`(mAppState.mSelectedTeam).thenReturn(BehaviorSubject.createDefault(TeamType.HOME))
+        Mockito.`when`(mAppState.mSelectedGame).thenReturn(BehaviorSubject.createDefault(game))
 
 
-        var testObserver= TestObserver<List<com.vijay.nbashottracker.feature.games.model.summary.Player?>>()
+        val testObserver= TestObserver<List<PlayerItem>>()
 
-        mShotChartViewModel!!.getTeamPlayers()?.subscribeOn(mSchedulerProvider?.computation())?.subscribe(testObserver)
+        mShotChartViewModel.getTeamPlayers()?.subscribeOn(mSchedulerProvider.computation())?.subscribe(testObserver)
 
         testObserver.assertNoErrors()
 
@@ -70,7 +72,7 @@ class ShotChartViewModelTest{
         val player1Id = "000"
         val player1Stat =
             PlayerStats(
-                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                Player(
                     "000",
                     "Test1 Player",
                     "00",
@@ -81,7 +83,7 @@ class ShotChartViewModelTest{
         val player2Id = "001"
         val player2Stat =
             PlayerStats(
-                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                Player(
                     "001",
                     "Test2 Player",
                     "01",
@@ -91,13 +93,13 @@ class ShotChartViewModelTest{
 
         val playerStats = mapOf(player1Id to player1Stat, player2Id to player2Stat)
 
-        Mockito.`when`(mAppState?.mSelectedPlayer).thenReturn(BehaviorSubject.createDefault(player1Id))
-        Mockito.`when`(mAppState?.mSelectedGamePlayerStats).thenReturn(BehaviorSubject.createDefault(playerStats))
+        Mockito.`when`(mAppState.mSelectedPlayer).thenReturn(BehaviorSubject.createDefault(player1Id))
+        Mockito.`when`(mAppState.mSelectedGamePlayerStats).thenReturn(BehaviorSubject.createDefault(playerStats))
 
 
-        var testObserver= TestObserver<PlayerStats>()
+        val testObserver= TestObserver<PlayerStats>()
 
-        mShotChartViewModel!!.getPlayerStats()?.subscribeOn(mSchedulerProvider?.computation())?.subscribe(testObserver)
+        mShotChartViewModel.getPlayerStats()?.subscribeOn(mSchedulerProvider.computation())?.subscribe(testObserver)
 
         testObserver.assertNoErrors()
 
@@ -111,7 +113,7 @@ class ShotChartViewModelTest{
         val player1Id = "000"
         val player1Stat =
             PlayerStats(
-                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                Player(
                     "000",
                     "Test1 Player",
                     "00",
@@ -122,7 +124,7 @@ class ShotChartViewModelTest{
         val player2Id = "001"
         val player2Stat =
             PlayerStats(
-                com.vijay.nbashottracker.feature.games.model.summary.Player(
+                Player(
                     "001",
                     "Test2 Player",
                     "01",
@@ -132,13 +134,13 @@ class ShotChartViewModelTest{
 
         val playerStats = mapOf(player2Id to player2Stat)
 
-        Mockito.`when`(mAppState?.mSelectedPlayer).thenReturn(BehaviorSubject.createDefault(player1Id))
-        Mockito.`when`(mAppState?.mSelectedGamePlayerStats).thenReturn(BehaviorSubject.createDefault(playerStats))
+        Mockito.`when`(mAppState.mSelectedPlayer).thenReturn(BehaviorSubject.createDefault(player1Id))
+        Mockito.`when`(mAppState.mSelectedGamePlayerStats).thenReturn(BehaviorSubject.createDefault(playerStats))
 
 
-        var testObserver= TestObserver<PlayerStats>()
+        val testObserver= TestObserver<PlayerStats>()
 
-        mShotChartViewModel!!.getPlayerStats()?.subscribeOn(mSchedulerProvider?.computation())?.subscribe(testObserver)
+        mShotChartViewModel.getPlayerStats()?.subscribeOn(mSchedulerProvider.computation())?.subscribe(testObserver)
 
         testObserver.assertNoErrors()
 
