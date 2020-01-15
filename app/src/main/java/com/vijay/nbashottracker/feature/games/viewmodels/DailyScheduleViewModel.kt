@@ -45,7 +45,7 @@ class DailyScheduleViewModel
         return appState
             .mSelectedGame
             .observeOn(schedulerProvider.computation())
-            .filter { it != com.vijay.nbashottracker.feature.games.state.AppState.EMPTY_GAME }
+            .filter { it != AppState.EMPTY_GAME }
             .flatMap{game->getPlayerStats.For(GetPlayerStats.Params(game.id)).toObservable()}
     }
 
