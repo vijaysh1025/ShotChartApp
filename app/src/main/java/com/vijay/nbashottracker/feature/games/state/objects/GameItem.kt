@@ -6,7 +6,7 @@ import com.vijay.nbashottracker.feature.games.model.dailyschedule.Game
  * Data Model for Game used by GetGames Use Case.
  */
 class GameItem
-constructor(game: com.vijay.nbashottracker.feature.games.model.dailyschedule.Game?=null){
+constructor(game: Game?=null){
     val id:String = game?.id?:""
     val homeTeam: Team =
         Team(

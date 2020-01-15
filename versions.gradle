@@ -1,0 +1,106 @@
+ext.deps = [:]
+def versions = [:]
+
+versions.material = '1.2.0-alpha03'
+versions.appcompat = '1.2.0-beta01'
+versions.constraintlayout = '1.1.3'
+versions.recyclerview = '1.2.0-alpha01'
+versions.cardview = '1.0.0'
+versions.legacy_support = '1.0.0'
+
+versions.rxjava = '2.2.6'
+versions.rxandroid = '2.1.0'
+versions.retrofit = '2.5.0'
+versions.converter_gson = '2.1.0'
+versions.adapter_rxjava2 = '2.5.0'
+versions.okhttp = '3.13.1'
+versions.picasso = '2.71828'
+versions.room_runtime = '2.0.0'
+versions.room_compiler = '2.0.0'
+versions.room_rxjava = '2.0.0'
+
+versions.junit = '4.12'
+versions.mocikto_core = '2.19.0'
+versions.mockito_inline = '2.13.0'
+versions.test_runner = '1.3.0-alpha03'
+versions.espresso_core = '3.3.0-alpha03'
+
+versions.kotlin_script_runtime = '1.3.61'
+
+versions.dagger = '2.22'
+
+versions.butterknife = '10.1.0'
+
+def deps = [:]
+
+def android = [:]
+android.material = "com.google.android.material:material:$versions.material"
+
+deps.android = android
+
+def androidx = [:]
+androidx.appcompat = 'androidx.appcompat:appcompat:1.0.0-beta01'
+androidx.constraintlayout = 'androidx.constraintlayout:constraintlayout:1.1.3'
+androidx.recyclerview = 'androidx.recyclerview:recyclerview:1.2.0-alpha01'
+androidx.cardview = 'androidx.cardview:cardview:1.0.0'
+androidx.legacy_support = 'androidx.legacy:legacy-support-v4:1.0.0'
+
+deps.androidx = androidx
+
+def reactive = [:]
+reactive.rxjava = 'io.reactivex.rxjava2:rxjava:2.2.6'
+reactive.rxandroid = 'io.reactivex.rxjava2:rxandroid:2.1.0'
+
+deps.reactive = reactive
+
+def network = [:]
+network.retrofit = 'com.squareup.retrofit2:retrofit:2.6.1'
+network.converter_gson = 'com.squareup.retrofit2:converter-gson:2.6.1'
+network.adapter_rxjava = 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+network.okhttp = 'com.squareup.okhttp3:okhttp:3.13.1'
+network.picasso = 'com.squareup.picasso:picasso:2.71828'
+
+deps.network = network
+
+def cache = [:]
+cache.room_runtime = "androidx.room:room-runtime:2.0.0"
+cache.room_compiler = "androidx.room:room-compiler:2.0.0"
+cache.room_rxjava = "androidx.room:room-rxjava2:2.0.0"
+
+deps.cache = cache
+
+def tests =[:]
+tests.junit = 'junit:junit:4.12'
+tests.mockito_core = 'org.mockito:mockito-core:2.19.0'
+tests.mockito_inline = 'org.mockito:mockito-inline:2.13.0'
+tests.runner = 'androidx.test:runner:1.3.0-alpha03'
+tests.espresso = 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
+
+deps.tests = tests
+
+def dagger = [:]
+dagger.dagger_android = 'com.google.dagger:dagger-android:2.22'
+dagger.dagger_android_support = 'com.google.dagger:dagger-android-support:2.22'
+dagger.dagger_android_processor = 'com.google.dagger:dagger-android-processor:2.22'
+dagger.dagger_compiler = 'com.google.dagger:dagger-compiler:2.22'
+
+deps.dagger = dagger
+
+def butterknife = [:]
+butterknife.butterknife = 'com.jakewharton:butterknife:10.1.0'
+butterknife.butterknife_compiler = 'com.jakewharton:butterknife-compiler:10.1.0'
+
+deps.butterknife = butterknife
+
+def build_versions = [:]
+build_versions.min_sdk = 21
+build_versions.target_sdk = 29
+build_versions.build_tools = '29.0.0'
+
+ext.build_versions = build_versions
+
+ext.deps = deps
+
+
+
+
